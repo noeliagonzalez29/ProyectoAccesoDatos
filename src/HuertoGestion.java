@@ -3,13 +3,13 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
 
-public class Huerto implements Serializable {
+public class HuertoGestion implements Serializable {
     private static final int LONGITUD= 9;
     private String nombreArchivo;
     private int filas;
     private int columnas;
 
-    public Huerto(String nombreArchivo, int filas, int columnas) {
+    public HuertoGestion(String nombreArchivo, int filas, int columnas) {
         this.nombreArchivo = nombreArchivo;
         this.filas = filas;
         this.columnas = columnas;

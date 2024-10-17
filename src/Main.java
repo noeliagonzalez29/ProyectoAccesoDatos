@@ -9,6 +9,7 @@ public class Main {
      *
      * @param args
      */
+
     private final static String RUTA_FICHE_BIN= "resources/stardam_valley.bin";
     private final static String RUTA_FICHE_CONFIG="resources/default_config.properties";
     private final static String RUTA_CONFIG_PERSO="resources/personalized_config.properties";
@@ -45,6 +46,7 @@ public class Main {
     }
     public static void nuevaPartida() {
         Scanner entrada= new Scanner(System.in);
+        GestionProperties p=null;
         String resp,fila,columna,presupuesto,estacion,duracion;
         //si hay fichero binario es por que habia partida previa y hay que borrar el bin
         if (Files.exists(Paths.get(RUTA_FICHE_BIN))){
@@ -59,55 +61,19 @@ public class Main {
         resp= entrada.nextLine();
         if (resp.equalsIgnoreCase("si")){
             System.out.println("Vamos a personalizar los datos");
-            Properties properties = new Properties();
-            try {
-                properties.load(new FileInputStream(RUTA_FICHE_CONFIG));
-                //ahora modificamos los atributos del properties
-                System.out.println("¿Cuántas filas quieres?");
-                fila= entrada.nextLine();
-                properties.setProperty("filashuerto", fila);
-                System.out.println("¿Cuántas columnas quieres?");
-                columna= entrada.nextLine();
-                properties.setProperty("columnas", columna);
-                System.out.println("¿Qué presupuesto tines?");
-                presupuesto= entrada.nextLine();
-                properties.setProperty("presupuesto", presupuesto);
-                System.out.println("¿Estación del año?");
-                estacion= entrada.nextLine();
-                properties.setProperty("estacioninicio", estacion);
-                System.out.println("¿Duración de la estación?");
-                duracion= entrada.nextLine();
-                properties.setProperty("duracionestacion", duracion);
-                //lo guardamos en el personalizado
-                properties.store(new FileOutputStream(RUTA_CONFIG_PERSO), "configuracion personalizada");
+           //metodo gestion crearfichero personalizado
+            p.crearFicheroPropiedadesPersonalizado();
                 //iniciamos los componente aacorde a la personalizacion
                 iniciarComponentes(Integer.parseInt(fila),Integer.parseInt(columna));
                 menuJuego();
 
                 //llamar al metodo de la clase Tienda que maneja la generacion de semillas
 
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
 
-        }else {
-            Properties properties= new Properties();
-            try {
-                properties.load(new FileInputStream(RUTA_FICHE_CONFIG));
-                fila= properties.getProperty("filashuerto");
-                columna=properties.getProperty("columnas");
-                presupuesto= properties.getProperty("presupuesto");
-                estacion= properties.getProperty("estacioninicio");
-                duracion= properties.getProperty("duracionestacion");
-
-                //iniciar componentes
-
-                iniciarComponentes(Integer.parseInt(fila),Integer.parseInt(columna));
-                menuJuego();
-                //llamar al metodo de la clase Tienda que maneja la generacion de semillas
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            } else {
+            //llamar a metodo crearfichero clase gestionproperties y al metodo iniciar componentes
+            iniciarComponentes(Integer.parseInt(fila),Integer.parseInt(columna));
+            menuJuego();
 
         }
 
@@ -140,7 +106,7 @@ public class Main {
                 int presu = granja.getPresupuesto();
                 Tienda ti= granja.getT();
                 Almacen al = granja.getA();
-                Huerto h= granja.getH();
+                HuertoGestion h= granja.getH();
 
                 menuJuego();
             } catch (IOException | ClassNotFoundException e) {
@@ -178,7 +144,6 @@ public class Main {
         }else {
             System.out.println("-----BIENVENIDO A STARDAM VALLEY------");
             System.out.println("1. NUEVA PARTIDA");
-
             opcion = entrada.nextInt();
             switch (opcion) {
                 case 1:

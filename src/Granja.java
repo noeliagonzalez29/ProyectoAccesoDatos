@@ -1,21 +1,28 @@
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 public class Granja implements Serializable {
     private int diaActual;
     private Estacion estacion;
     private int presupuesto;
     private Tienda t;
-    private Huerto h;
+    private HuertoGestion h;
     private Almacen a;
+    private List semillasDisponibles;
 
+    public List getSemillasDisponibles() {
+        return semillasDisponibles;
+    }
 
-    public Huerto getH() {
+    public void setSemillasDisponibles(List semillasDisponibles) {
+        this.semillasDisponibles = semillasDisponibles;
+    }
+
+    public HuertoGestion getH() {
         return h;
     }
 
-    public void setH(Huerto h) {
+    public void setH(HuertoGestion h) {
         this.h = h;
     }
 
@@ -69,6 +76,7 @@ public class Granja implements Serializable {
     public void avanzarDia(){
         diaActual++;
 
+        //llamo al get duracion del properties para pasar de estacion
 
     }
 }
