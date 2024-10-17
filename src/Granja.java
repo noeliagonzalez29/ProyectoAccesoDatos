@@ -1,19 +1,36 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Granja {
+public class Granja implements Serializable {
     private int diaActual;
     private Estacion estacion;
     private int presupuesto;
     private Tienda t;
-    private HashMap<String,Integer>almacen;
+    private Huerto h;
+    private Almacen a;
 
 
-    public Granja() {
-        this.diaActual = 1;
-        this.estacion= Estacion.PRIMAVERA;
-        this.presupuesto=1000;
-        this.almacen= new HashMap<>();
+    public Huerto getH() {
+        return h;
+    }
+
+    public void setH(Huerto h) {
+        this.h = h;
+    }
+
+    public Almacen getA() {
+        return a;
+    }
+
+    public void setA(Almacen a) {
+        this.a = a;
+    }
+
+    public Granja(int diaActual, Estacion estacion, int presupuesto) {
+        this.diaActual = diaActual;
+        this.estacion = estacion;
+        this.presupuesto = presupuesto;
     }
 
     public int getDiaActual() {
@@ -48,15 +65,10 @@ public class Granja {
         this.t = t;
     }
 
-    public HashMap<String, Integer> getAlmacen() {
-        return almacen;
-    }
-
-    public void setAlmacen(HashMap<String, Integer> almacen) {
-        this.almacen = almacen;
-    }
 
     public void avanzarDia(){
         diaActual++;
+
+
     }
 }

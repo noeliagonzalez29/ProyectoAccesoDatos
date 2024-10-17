@@ -1,8 +1,9 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.Serializable;
 
-public class Huerto {
+public class Huerto implements Serializable {
     private static final int LONGITUD= 9;
     private String nombreArchivo;
     private int filas;
