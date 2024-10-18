@@ -10,11 +10,13 @@ public class Main {
      * @param args
      */
 
-    private final static String RUTA_FICHE_BIN= "resources/stardam_valley.bin";
-    private final static String RUTA_FICHE_CONFIG="resources/default_config.properties";
-    private final static String RUTA_CONFIG_PERSO="resources/personalized_config.properties";
+    private final static GestionBinario GESTION_BINARIO = new GestionBinario();
     public static void menuJuego(){
         Scanner entrada= new Scanner(System.in);
+        GestionProperties gestion= new GestionProperties();
+        Granja granja = null;
+        String[]valores;
+        String resp;
         int opc;
         do{
             System.out.println("------STARDAM VALLEY------");
@@ -38,7 +40,20 @@ public class Main {
                     break;
                 case 6:
                     System.out.println("ABANDONANDO EL JUEGO...");
+                    System.out.println("La partida fue personalizada?");
+                    resp= entrada.nextLine();
+
+                    if (resp.equalsIgnoreCase("si")){
+                        valores=gestion.crearFicheroPropiedadesPersonalizado();
+                    }else {
+                        valores=gestion.crearFichero();
+                    }
+                    int presu= Integer.parseInt(valores[2]);
+                    Estacion e= Estacion.valueOf(valores[3].toUpperCase());
+                    int diaAct= granja.getDiaActual();
                     //tengo que guardar en el archivo bin el estado del juego
+                     granja = new Granja(diaAct,e,presu);
+                    GESTION_BINARIO.guardarPartida(granja);
                     break;
 
             }
@@ -46,36 +61,28 @@ public class Main {
     }
     public static void nuevaPartida() {
         Scanner entrada= new Scanner(System.in);
-        GestionProperties p=null;
-        String resp,fila,columna,presupuesto,estacion,duracion;
+        GestionProperties p=new GestionProperties();;
+        String resp;
+        String[] valores;
         //si hay fichero binario es por que habia partida previa y hay que borrar el bin
-        if (Files.exists(Paths.get(RUTA_FICHE_BIN))){
-            try {
-                Files.delete(Paths.get(RUTA_FICHE_BIN));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        GESTION_BINARIO.eliminarBinarioPartida();
         //preguntamos si quiere personalizar el fichero properties
         System.out.println("¿Quieres personalizar la partida?");
         resp= entrada.nextLine();
         if (resp.equalsIgnoreCase("si")){
             System.out.println("Vamos a personalizar los datos");
            //metodo gestion crearfichero personalizado
-            p.crearFicheroPropiedadesPersonalizado();
-                //iniciamos los componente aacorde a la personalizacion
-                iniciarComponentes(Integer.parseInt(fila),Integer.parseInt(columna));
-                menuJuego();
+           valores= p.crearFicheroPropiedadesPersonalizado();
 
                 //llamar al metodo de la clase Tienda que maneja la generacion de semillas
 
-
-            } else {
+        } else {
             //llamar a metodo crearfichero clase gestionproperties y al metodo iniciar componentes
-            iniciarComponentes(Integer.parseInt(fila),Integer.parseInt(columna));
-            menuJuego();
+            valores=p.crearFichero();
 
         }
+        iniciarComponentes(Integer.parseInt(valores[0]),Integer.parseInt(valores[1]));
+        menuJuego();
 
     }
 
@@ -96,11 +103,9 @@ public class Main {
     }
     public static void cargarPartida(){
         //cargo el binario si existe y muestro el menu
-        if (Files.exists(Paths.get(RUTA_FICHE_BIN))) {
-            try {
-                InputStream ArchivoEntrada= Files.newInputStream(Paths.get(RUTA_FICHE_BIN));
-                ObjectInputStream flujoEntrada= new ObjectInputStream(ArchivoEntrada);
-                Granja granja = (Granja) flujoEntrada.readObject();
+        if (GESTION_BINARIO.existeFichero()) {
+
+               Granja granja= GESTION_BINARIO.cargarBinarioPartida();
                 int diaAc = granja.getDiaActual();
                 Estacion estacion= granja.getEstacion();
                 int presu = granja.getPresupuesto();
@@ -109,9 +114,7 @@ public class Main {
                 HuertoGestion h= granja.getH();
 
                 menuJuego();
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+
 
         }else {
             System.out.println("No existe partida guardada");
@@ -120,7 +123,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner entrada= new Scanner(System.in);
         int opcion;
-        if (Files.exists(Paths.get(RUTA_FICHE_BIN))) {
+        if (GESTION_BINARIO.existeFichero()) {
 
             do {
                 System.out.println("-----BIENVENIDO A STARDAM VALLEY------");

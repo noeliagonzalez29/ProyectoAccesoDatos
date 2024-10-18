@@ -7,15 +7,16 @@ public class GestionProperties {
     private final static String RUTA_FICHE_CONFIG="resources/default_config.properties";
     private final static String RUTA_CONFIG_PERSO="resources/personalized_config.properties";
 
-    public void crearFichero(){
+    public String[] crearFichero(){
         Properties properties= new Properties();
+        String[] valores= new String[5];
         try {
             properties.load(new FileInputStream(RUTA_FICHE_CONFIG));
-            fila= properties.getProperty("filashuerto");
-            columna=properties.getProperty("columnas");
-            presupuesto= properties.getProperty("presupuesto");
-            estacion= properties.getProperty("estacioninicio");
-            duracion= properties.getProperty("duracionestacion");
+            valores[0]= properties.getProperty("filashuerto");
+            valores[1]=properties.getProperty("columnas");
+            valores[2]= properties.getProperty("presupuesto");
+            valores[3]= properties.getProperty("estacioninicio");
+            valores[4]= properties.getProperty("duracionestacion");
 
             //iniciar componentes
 
@@ -26,34 +27,36 @@ public class GestionProperties {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return valores;
     }
-    public void crearFicheroPropiedadesPersonalizado(){
+    public String[] crearFicheroPropiedadesPersonalizado(){
         Scanner entrada= new Scanner(System.in);
-        String fila,columna,presupuesto,estacion,duracion;
+        String[] valorP= new String[5];
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream(RUTA_FICHE_CONFIG));
             //ahora modificamos los atributos del properties
             System.out.println("¿Cuántas filas quieres?");
-            fila= entrada.nextLine();
-            properties.setProperty("filashuerto", fila);
+            valorP[0]= entrada.nextLine();
+            properties.setProperty("filashuerto",  valorP[0]);
             System.out.println("¿Cuántas columnas quieres?");
-            columna= entrada.nextLine();
-            properties.setProperty("columnas", columna);
+            valorP[1]= entrada.nextLine();
+            properties.setProperty("columnas",  valorP[1]);
             System.out.println("¿Qué presupuesto tines?");
-            presupuesto= entrada.nextLine();
-            properties.setProperty("presupuesto", presupuesto);
+            valorP[2]= entrada.nextLine();
+            properties.setProperty("presupuesto",  valorP[2]);
             System.out.println("¿Estación del año?");
-            estacion= entrada.nextLine();
-            properties.setProperty("estacioninicio", estacion);
+            valorP[3]= entrada.nextLine();
+            properties.setProperty("estacioninicio",  valorP[3]);
             System.out.println("¿Duración de la estación?");
-            duracion= entrada.nextLine();
-            properties.setProperty("duracionestacion", duracion);
+            valorP[4]= entrada.nextLine();
+            properties.setProperty("duracionestacion",  valorP[4]);
             //lo guardamos en el personalizado
             properties.store(new FileOutputStream(RUTA_CONFIG_PERSO), "configuracion personalizada");
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return  valorP;
     }
 
 
