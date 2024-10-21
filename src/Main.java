@@ -73,6 +73,8 @@ public class Main {
             System.out.println("Vamos a personalizar los datos");
            //metodo gestion crearfichero personalizado
            valores= p.crearFicheroPropiedadesPersonalizado();
+           HuertoGestion h=new HuertoGestion();
+           h.crearFicheroHuerto();
 
                 //llamar al metodo de la clase Tienda que maneja la generacion de semillas
 

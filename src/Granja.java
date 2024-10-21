@@ -92,44 +92,46 @@ public class Granja implements Serializable {
                 break;
         }
 
-        public void iniciarNuevoDia () {
-            Estacion estacionAnterior = estacion;
 
-            // 1. Actualizar el contador de días
-            diaActual++;
-            diasEnEstacionActual++;
+    }
+    public void iniciarNuevoDia () {
+        Estacion estacionAnterior = estacion;
 
-            // 2. Verificar si es necesario cambiar de estación
-            int duracionEstacion = Integer.parseInt(propiedades.getProperty("duracionestacion"));
-            if (diasEnEstacionActual > duracionEstacion) {
-                cambiarEstacion();
-                diasEnEstacionActual = 1; // Reiniciar el contador de días en la nueva estación
-            }
+        // 1. Actualizar el contador de días
+        diaActual++;
+        diasEnEstacionActual++;
 
-            // 3. Actualizar cultivos o limpiar huerto
-            if (estacion == estacionAnterior) {
-                h.actualizarHuertoNuevoDia();
-            } else {
-                h.cuidarHuerto();  // Eliminar todos los cultivos si cambió la estación
-            }
-
-            // 4. Generar nuevas semillas para la tienda
-            t.generarSemillasDelDia(estacion.toString());
+        // 2. Verificar si es necesario cambiar de estación
+        int duracionEstacion = Integer.parseInt(propiedades.getProperty("duracionestacion"));
+        if (diasEnEstacionActual > duracionEstacion) {
+            cambiarEstacion();
+            diasEnEstacionActual = 1; // Reiniciar el contador de días en la nueva estación
         }
 
+        // 3. Actualizar cultivos o limpiar huerto
+        if (estacion == estacionAnterior) {
+            h.actualizarHuertoNuevoDia();
+        } else {
+            h.cuidarHuerto();  // Eliminar todos los cultivos si cambió la estación
+        }
 
-        public void cuidarHuerto () {
-        }
-        public void plantarCultivoColumna ( int columna){
-        }
-        public void venderFrutos () {
-        }
-        public void mostrarGranja() {
-            System.out.println("Estado de la granja:");
-            System.out.println("Día actual: " + diaActual);
-            System.out.println("Estación actual: " + estacion);
-            System.out.println("Presupuesto: " + presupuesto);
-            h.mostrarHuerto();
-        }
+        // 4. Generar nuevas semillas para la tienda
+        t.generarSemillasDelDia(estacion.toString());
+    }
+
+
+    public void cuidarHuerto () {
+        h.cuidarHuerto();
+    }
+    public void plantarCultivoColumna ( int columna){
+    }
+    public void venderFrutos () {
+    }
+    public void mostrarGranja() {
+        System.out.println("Estado de la granja:");
+        System.out.println("Día actual: " + diaActual);
+        System.out.println("Estación actual: " + estacion);
+        System.out.println("Presupuesto: " + presupuesto);
+        h.mostrarHuerto();
     }
 }

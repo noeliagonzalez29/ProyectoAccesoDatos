@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.Scanner;
 public class GestionProperties {
-    private final static String RUTA_FICHE_CONFIG="resources/default_config.properties";
-    private final static String RUTA_CONFIG_PERSO="resources/personalized_config.properties";
+    private final static String RUTA_FICHE_CONFIG="src/resources/default_config.properties";
+    private final static String RUTA_CONFIG_PERSO="src/resources/personalized_config.properties";
 
     public String[] crearFichero(){
         Properties properties= new Properties();

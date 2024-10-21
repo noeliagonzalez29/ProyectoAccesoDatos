@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HuertoGestion implements Serializable {
-    private static final String RUTA_HUERTO = "resources/huerto.dat";
+    private static final String RUTA_HUERTO = "src/resources/huerto.dat";
     private RandomAccessFile raf;
     private int filas;
     private int columnas;
     private static final int LONGITUD_INT= 4;
     private  static  final int LONGITUD_BOOLEAN=1;
     private static final int LONGITUD= LONGITUD_INT + LONGITUD_BOOLEAN +LONGITUD_INT;
-    private GestionProperties p;
+    private GestionProperties p= new GestionProperties();
     private Semilla s;
     private Granja g;
     private Almacen a;
@@ -29,10 +29,15 @@ public class HuertoGestion implements Serializable {
     }
 
     public void inicializarHuerto(){
-        int filas= Integer.parseInt(p.getProperty("filashuerto"));
-        int columnas= Integer.parseInt(p.getProperty("columnas"));
+        String filasStr = p.getProperty("filashuerto");
+        String columnasStr = p.getProperty("columnas");
+        //NO ESTÁ LEYENDO BIEN LO QUE HAY EN EL ARCHIVO PROPERTY
+        System.out.println("Valor de filashuerto: '" + filas + "'");
+        System.out.println("Valor de columnas: '" + columnas+ "'");
 
         try {
+            int filas = Integer.parseInt(filasStr);
+            int columnas = Integer.parseInt(columnasStr);
             RandomAccessFile raf = new RandomAccessFile("resources/huerto.dat", "rw");
             for (int i= 0; i<filas; i++){
                 for (int j=0; j<=columnas; j++){
