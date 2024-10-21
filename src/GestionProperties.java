@@ -60,4 +60,9 @@ public class GestionProperties {
     }
 
 
+    public String getProperty(String valorProperty) {
+        Properties properties = new Properties();
+        properties.getProperty(valorProperty);
+        return  valorProperty;
+    }
 }

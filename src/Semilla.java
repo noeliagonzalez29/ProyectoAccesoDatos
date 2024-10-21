@@ -92,7 +92,7 @@ public class Semilla {
 
     public ArrayList<Semilla> leerSemillas(){
         ArrayList<Semilla>lSemilla=new ArrayList<>();
-        List<Estacion>estaciones= new ArrayList<>();
+        //List<Estacion>estaciones= new ArrayList<>();
         try{
             DocumentBuilderFactory dbFactory= DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -110,14 +110,9 @@ public class Semilla {
                     String id = semilla.getAttribute("id");
 
                     String nombre = semilla.getElementsByTagName("nombre").item(0).getTextContent();
-                    NodeList estacionNodes = semilla.getElementsByTagName("estacion");
+                    String estacion = semilla.getElementsByTagName("estacion").item(0).getTextContent();
+                    List<Estacion>estaciones = Estacion.estacionesSeparadas(estacion);
 
-                    for (int j = 0; j < estacionNodes.getLength(); j++) {
-                        // Obtener el contenido de cada estación
-                        String est = estacionNodes.item(j).getTextContent();
-                        // Agregar la estación a la lista
-                        estaciones.add(Estacion.valueOf(est));
-                    }
                     int diaCrecimiento= Integer.parseInt(semilla.getElementsByTagName("diasCrecimiento").item(0).getTextContent());
                     int precioCompraSemilla= Integer.parseInt(semilla.getElementsByTagName("precioCompraSemilla").item(0).getTextContent());
                     int precioVentaFruto= Integer.parseInt(semilla.getElementsByTagName("precioVentaFruto").item(0).getTextContent());
@@ -128,7 +123,6 @@ public class Semilla {
 
                 }
             }
-
 
         } catch (Exception e) {
             throw new RuntimeException(e);
