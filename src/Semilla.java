@@ -9,22 +9,23 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Semilla {
-    private final static String RUTA_FICH_XML= "resources/semillas.xml";
+public class Semilla implements Serializable {
+    private final static String RUTA_FICH_XML= "src/resources/semillas.xml";
 
-    private String id;
+    private int id;
     private String nombre;
     private List<Estacion> estaciones; //tiene puesto lista pero no sé por qué
     private int diasCrecimiento;
     private int precioCompraSemilla;
     private int precioVentaFruto;
     private int maxFrutos;
+    private ArrayList<Semilla>lSemilla=new ArrayList<>();
 
-
-    public Semilla(String id, String nombre, List<Estacion>estaciones, int diasCrecimiento, int precioCompraSemilla, int precioVentaFruto, int maxFrutos) {
+    public Semilla(int id, String nombre, List<Estacion>estaciones, int diasCrecimiento, int precioCompraSemilla, int precioVentaFruto, int maxFrutos) {
         this.id = id;
         this.nombre = nombre;
         this.estaciones = estaciones;
@@ -34,11 +35,15 @@ public class Semilla {
         this.maxFrutos = maxFrutos;
     }
 
-    public String getId() {
+    public Semilla() {
+
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -91,7 +96,7 @@ public class Semilla {
     }
 
     public ArrayList<Semilla> leerSemillas(){
-        ArrayList<Semilla>lSemilla=new ArrayList<>();
+
         //List<Estacion>estaciones= new ArrayList<>();
         try{
             DocumentBuilderFactory dbFactory= DocumentBuilderFactory.newInstance();
@@ -107,7 +112,7 @@ public class Semilla {
                 if (nodoSemilla.getNodeType() == Node.ELEMENT_NODE){
                     Element semilla = (Element) nodoSemilla;
 
-                    String id = semilla.getAttribute("id");
+                    int id =Integer.parseInt(semilla.getAttribute("id")) ;
 
                     String nombre = semilla.getElementsByTagName("nombre").item(0).getTextContent();
                     String estacion = semilla.getElementsByTagName("estacion").item(0).getTextContent();
@@ -128,5 +133,13 @@ public class Semilla {
             throw new RuntimeException(e);
         }
         return lSemilla;
+    }
+    public Semilla buscarSemillaPorId( int id) {
+        for (Semilla semilla : lSemilla) {
+            if (id == semilla.getId()) {
+                return semilla;
+            }
+        }
+        return null;
     }
 }

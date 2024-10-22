@@ -17,30 +17,29 @@ public class HuertoGestion implements Serializable {
     private Almacen a;
 
     public HuertoGestion() {
-
+        this.p = new GestionProperties();
+        this.s = new Semilla();
+        this.a = new Almacen();
         inicializarHuerto();
     }
     public HuertoGestion(GestionProperties p, Semilla s, Almacen a) {
         this.p = p;
         this.s = s;
-        this.a = a;
-        this.filas = Integer.parseInt(p.getProperty("filashuerto"));
-        this.columnas = Integer.parseInt(p.getProperty("columnashuerto"));
+        this.a =a;
+        inicializarHuerto();
     }
 
     public void inicializarHuerto(){
         String filasStr = p.getProperty("filashuerto");
         String columnasStr = p.getProperty("columnas");
-        //NO ESTÁ LEYENDO BIEN LO QUE HAY EN EL ARCHIVO PROPERTY
-        System.out.println("Valor de filashuerto: '" + filas + "'");
-        System.out.println("Valor de columnas: '" + columnas+ "'");
+
 
         try {
             int filas = Integer.parseInt(filasStr);
             int columnas = Integer.parseInt(columnasStr);
-            RandomAccessFile raf = new RandomAccessFile("resources/huerto.dat", "rw");
+            RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
             for (int i= 0; i<filas; i++){
-                for (int j=0; j<=columnas; j++){
+                for (int j=0; j<columnas; j++){
                     raf.writeInt(-1);
                     raf.writeBoolean(false);
                     raf.writeInt(-1);
@@ -50,6 +49,7 @@ public class HuertoGestion implements Serializable {
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Archivo no encontrado: " + e.getMessage());
         } catch (IOException e) {
+            e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
 
@@ -61,54 +61,54 @@ public class HuertoGestion implements Serializable {
         ArrayList<Semilla> semillas = s.leerSemillas();
         try {
             RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
-            raf.seek(0);
+            // Iterar por cada celda del huerto
             for (int i = 0; i < filas; i++) {
                 for (int j = 0; j < columnas; j++) {
-                    long posicion = (i * columnas + j) * LONGITUD;
+                    long posicion = (i * columnas + j) * LONGITUD; // Calcula la posición en el archivo
                     raf.seek(posicion);
 
-                    int id = raf.readInt();
-                    boolean regado = raf.readBoolean();
-                    int diasPlantado = raf.readInt();
+                    int id = raf.readInt();           // Lee el id de la semilla
+                    boolean regado = raf.readBoolean(); // Lee si la celda ha sido regada
+                    int diasPlantado = raf.readInt();   // Lee cuántos días lleva plantado
 
+                    // Si hay una semilla plantada (id != -1)
                     if (id != -1) {
-                        // Hay una semilla plantada
-                        if (!regado) {
-                            // Regar la planta
-                            raf.seek(posicion + LONGITUD_INT);
-                            raf.writeBoolean(true);
+                        System.out.println("Cuidando semilla en posición (" + i + ", " + j + "), ID: " + id);
+
+                        // Si la semilla ha sido regada
+                        if (regado) {
+                            diasPlantado++; // Incrementar los días plantado
+                            System.out.println("Semilla ha sido regada. Incrementando días a: " + diasPlantado);
+
+                            // Actualiza la celda para reflejar el nuevo estado
+                            raf.seek(posicion);
+                            raf.writeInt(id);
+                            raf.writeBoolean(false); // Se marca como no regada para el siguiente ciclo
+                            raf.writeInt(diasPlantado);
                         }
 
-                        // Incrementar los días plantados
-                        diasPlantado++;
-                        raf.seek(posicion + LONGITUD_BOOLEAN+ LONGITUD_INT);
-                        raf.writeInt(diasPlantado);
+                        // Obtener información de la semilla desde la clase Semilla
+                        Semilla semilla = s.buscarSemillaPorId(id); // Método que devuelve la semilla por su ID
 
-                        // Buscar la semilla correspondiente
-                        boolean encontrado = false;
+                        // Verificar si la planta ha crecido lo suficiente para cosechar
+                        if (diasPlantado >= semilla.getDiasCrecimiento()) {
+                            // La semilla está lista para cosechar
+                            int maxFrutos = semilla.getMaxFrutos(); // Número máximo de frutos
+                            System.out.println("La semilla en (" + i + ", " + j + ") está lista para cosechar. Frutos obtenidos: " + maxFrutos);
 
-                        while (!encontrado && i < semillas.size()) {
-                            Semilla semilla = semillas.get(i);
-                            if (semilla.getId().equals(String.valueOf(id))) {
-                                encontrado = true;
-                                if (diasPlantado >= semilla.getDiasCrecimiento()) {
-                                    // Cosechar
-                                    Map<String, Integer> nuevaCosecha = new HashMap<>();
-                                    nuevaCosecha.put(semilla.getNombre(), semilla.getMaxFrutos());
-                                    a.añadirCosecha(nuevaCosecha);
+                            // Almacenar los frutos en el almacén
+                            a.guardarFrutos(semilla, maxFrutos);  // Método para guardar los frutos en el almacén
 
-                                    // Reiniciar la celda
-                                    raf.seek(posicion);
-                                    raf.writeInt(-1);
-                                    raf.writeBoolean(false);
-                                    raf.writeInt(-1);
-                                }
-                            }
-                            i++;
+                            // Restablecer la celda a su estado original (vacío)
+                            raf.seek(posicion);
+                            raf.writeInt(-1);      // No hay semilla plantada
+                            raf.writeBoolean(false); // No regado
+                            raf.writeInt(-1);      // No hay días plantados
                         }
                     }
                 }
             }
+            cerrarConexion();
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -143,7 +143,9 @@ public class HuertoGestion implements Serializable {
 
     }
     public void mostrarHuerto() {
+
         try {
+            RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
             raf.seek(0);
             for (int i = 0; i < filas; i++) {
                 for (int j = 0; j < columnas; j++) {
@@ -205,12 +207,18 @@ public class HuertoGestion implements Serializable {
             throw new IllegalArgumentException("La columna no está vacía");
         }
         try {
+            RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
             for (int i = 0; i < filas; i++) {
                 long posicion = (i * columnas + columna) * LONGITUD;
                 raf.seek(posicion);
-                raf.writeInt(idSemilla);
-                raf.writeBoolean(false);
-                raf.writeInt(0);
+                int idActual= raf.readInt();
+
+                if (idActual==-1) {
+                    raf.seek(posicion);
+                    raf.writeInt(idSemilla);
+                    raf.writeBoolean(false);
+                    raf.writeInt(0);
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException("Error al plantar semilla en la columna: " + e.getMessage());
@@ -242,4 +250,22 @@ public class HuertoGestion implements Serializable {
             throw new RuntimeException("Error al cerrar la conexión del huerto: " + e.getMessage());
         }
     }
+
+    public void venderFrutos() {
+        Map<Semilla, Integer> almacen = a.obtenerAlmacen(); // Obtenemos el almacén con id y cantidad
+        int gananciasTotales = 0;
+
+        for (Semilla semilla : almacen.keySet()) {
+            int cantidad = almacen.get(semilla);  // Obtenemos la cantidad del fruto para esa semilla
+            int precioVenta = semilla.getPrecioVentaFruto(); // Obtenemos el precio de venta del fruto
+            int ganancias = precioVenta * cantidad;          // Calculamos las ganancias
+
+            System.out.println("Se han vendido " + cantidad + " unidades de " + semilla.getNombre() + " por " + ganancias + " euros.");
+            gananciasTotales += ganancias;
+        }
+
+        System.out.println("Ganancias totales: " + gananciasTotales + " euros.");
+    }
+
+
 }

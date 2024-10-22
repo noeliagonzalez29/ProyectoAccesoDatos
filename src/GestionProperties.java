@@ -1,11 +1,18 @@
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.Scanner;
-public class GestionProperties {
+public class GestionProperties implements Serializable {
     private final static String RUTA_FICHE_CONFIG="src/resources/default_config.properties";
     private final static String RUTA_CONFIG_PERSO="src/resources/personalized_config.properties";
+    private transient Properties properties;
+    private static final long serialVersionUID = 1L;
+
+    public GestionProperties() {
+        properties = new Properties();
+
+    }
+
 
     public String[] crearFichero(){
         Properties properties= new Properties();
@@ -19,12 +26,15 @@ public class GestionProperties {
             valores[4]= properties.getProperty("duracionestacion");
 
             //iniciar componentes
-
+            //depuracion
+            System.out.println("Valores cargados: " + Arrays.toString(valores));
 
 
             //llamar al metodo de la clase Tienda que maneja la generacion de semillas
 
         } catch (IOException e) {
+            e.printStackTrace();
+
             throw new RuntimeException(e);
         }
         return valores;
@@ -62,7 +72,20 @@ public class GestionProperties {
 
     public String getProperty(String valorProperty) {
         Properties properties = new Properties();
-        properties.getProperty(valorProperty);
-        return  valorProperty;
+        try {
+            properties.load(new FileInputStream(RUTA_FICHE_CONFIG));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return properties.getProperty(valorProperty)  ;
+    }
+    public void cargarPropiedades(boolean personalizar) {
+        if (personalizar) {
+            crearFicheroPropiedadesPersonalizado(); // Cargar personalizado si el usuario lo desea
+        } else {
+            crearFichero(); // Cargar propiedades por defecto
+        }
+
     }
 }

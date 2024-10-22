@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum Estacion {
+public enum Estacion implements Serializable {
     PRIMAVERA, VERANO, OTOÑO, INVIERNO;
 
     public static List<Estacion> estacionesSeparadas(String estaciones) {
@@ -12,4 +13,6 @@ public enum Estacion {
         }
         return listaEstaciones;
     }
+
+
 }

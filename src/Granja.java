@@ -1,5 +1,10 @@
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 public class Granja implements Serializable {
     private int diaActual;
@@ -8,6 +13,7 @@ public class Granja implements Serializable {
     private Tienda t;
     private HuertoGestion h;
     private Almacen a;
+    Semilla semilla;
     private List<Semilla> semillasDisponibles;
     private GestionProperties propiedades;
     private int diasEnEstacionActual;
@@ -40,6 +46,32 @@ public class Granja implements Serializable {
         this.diaActual = diaActual;
         this.estacion = estacion;
         this.presupuesto = presupuesto;
+    }
+
+    public Granja() {
+        this.h= new HuertoGestion();
+        this.a= new Almacen();
+        this.semilla= new Semilla();
+        this.semillasDisponibles= new ArrayList<>();
+        this.t= new Tienda();
+        this.propiedades=new GestionProperties();
+        this.diaActual=1;
+        this.diasEnEstacionActual=1;
+
+    }
+    public void inicializarValores(boolean personalizado) {
+        String[] valores;
+        if (personalizado) {
+            valores = propiedades.crearFicheroPropiedadesPersonalizado();
+        } else {
+            valores = propiedades.crearFichero();
+        }
+
+        // Inicializar valores desde el array
+        this.presupuesto = Integer.parseInt(valores[2]);
+        this.estacion = Estacion.valueOf(valores[3].toUpperCase());
+        // Si necesitas inicializar el huerto con filas y columnas:
+        this.h.inicializarHuerto();
     }
 
     public int getDiaActual() {
@@ -95,6 +127,7 @@ public class Granja implements Serializable {
 
     }
     public void iniciarNuevoDia () {
+        estacion= Estacion.valueOf(propiedades.getProperty("estacioninicio"));
         Estacion estacionAnterior = estacion;
 
         // 1. Actualizar el contador de días
@@ -116,7 +149,9 @@ public class Granja implements Serializable {
         }
 
         // 4. Generar nuevas semillas para la tienda
-        t.generarSemillasDelDia(estacion.toString());
+        t.generarSemillasDelDia(String.valueOf(estacion));
+        // Opcional: Mostrar información del nuevo día o estación
+        System.out.println("Día " + diaActual + " en la estación " + estacion);
     }
 
 
@@ -124,8 +159,53 @@ public class Granja implements Serializable {
         h.cuidarHuerto();
     }
     public void plantarCultivoColumna ( int columna){
+        // Mostrar las semillas disponibles para plantar
+        List<Semilla> semillasDisponibles = semilla.leerSemillas();
+        System.out.println("Semillas disponibles para plantar:");
+        for (Semilla semilla : semillasDisponibles) {
+            System.out.println("ID: " + semilla.getId() + ", Nombre: " + semilla.getNombre() + ", Días de Crecimiento: " + semilla.getDiasCrecimiento());
+        }
+
+        // Pedir al usuario que seleccione una semilla
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Ingrese el ID de la semilla que desea plantar en la columna " + columna + ":");
+        int idSemilla = scanner.nextInt();
+
+        // Intentar plantar la semilla en la columna
+
+        h.plantarSemillaColumna(idSemilla, columna); // Método que deberías tener en Huerto
+
+
+
+
     }
     public void venderFrutos () {
+        // Obtener los frutos del almacén
+        Map<Semilla, Integer> frutosEnAlmacen = a.obtenerAlmacen(); // Método que debes implementar en Almacen
+        double gananciasTotales = 0.0; // Inicializar ganancias totales
+
+        System.out.println("Ventas de frutos:");
+
+        for (Semilla semi : frutosEnAlmacen.keySet()) {
+
+            int cantidad = frutosEnAlmacen.get(semi); // Cantidad de frutos
+            double precioVenta = semilla.getPrecioVentaFruto();
+            double totalVenta = precioVenta * cantidad;
+
+            // Mostrar la información de la venta
+            System.out.println("Se han vendido " + cantidad + " unidades de " + semilla.getNombre() + " por " + totalVenta + " euros.");
+
+            gananciasTotales += totalVenta;
+
+
+
+            // Limpiar los frutos vendidos del almacén
+            a.eliminarFrutos(semi.getId()); // Método para eliminar los frutos vendidos
+
+        }
+
+        // Mostrar las ganancias totales
+        System.out.println("Ganancias totales: " + gananciasTotales + " euros.");
     }
     public void mostrarGranja() {
         System.out.println("Estado de la granja:");
@@ -134,4 +214,8 @@ public class Granja implements Serializable {
         System.out.println("Presupuesto: " + presupuesto);
         h.mostrarHuerto();
     }
+
+
+
+
 }

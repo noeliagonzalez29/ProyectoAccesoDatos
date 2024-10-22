@@ -3,7 +3,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class GestionBinario {
-    private final static String RUTA_FICHE_BIN= "resources/stardam_valley.bin";
+    private final static String RUTA_FICHE_BIN= "src/resources/stardam_valley.bin";
 
     public void crearFicheroBinario(){
         try{
@@ -35,6 +35,7 @@ public class GestionBinario {
              granja = (Granja) flujoEntrada.readObject();
 
         } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
             throw new RuntimeException("Hay un error al cargar la partida");
         }
         return  granja;

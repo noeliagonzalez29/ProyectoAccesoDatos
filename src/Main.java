@@ -14,7 +14,8 @@ public class Main {
     public static void menuJuego(){
         Scanner entrada= new Scanner(System.in);
         GestionProperties gestion= new GestionProperties();
-        Granja granja = null;
+        int columna = Integer.parseInt(gestion.getProperty("columnas"));
+        Granja granja = new Granja();
         String[]valores;
         String resp;
         int opc;
@@ -29,30 +30,22 @@ public class Main {
             opc= entrada.nextInt();
             switch (opc){
                 case 1:
+                    granja.iniciarNuevoDia();
                     break;
                 case 2:
+                    granja.cuidarHuerto();
                     break;
                 case 3:
+                    granja.plantarCultivoColumna(columna);
                     break;
                 case 4:
+                    granja.venderFrutos();
                     break;
                 case 5:
+                    granja.mostrarGranja();
                     break;
                 case 6:
                     System.out.println("ABANDONANDO EL JUEGO...");
-                    System.out.println("La partida fue personalizada?");
-                    resp= entrada.nextLine();
-
-                    if (resp.equalsIgnoreCase("si")){
-                        valores=gestion.crearFicheroPropiedadesPersonalizado();
-                    }else {
-                        valores=gestion.crearFichero();
-                    }
-                    int presu= Integer.parseInt(valores[2]);
-                    Estacion e= Estacion.valueOf(valores[3].toUpperCase());
-                    int diaAct= granja.getDiaActual();
-                    //tengo que guardar en el archivo bin el estado del juego
-                     granja = new Granja(diaAct,e,presu);
                     GESTION_BINARIO.guardarPartida(granja);
                     break;
 
@@ -61,17 +54,21 @@ public class Main {
     }
     public static void nuevaPartida() {
         Scanner entrada= new Scanner(System.in);
-        GestionProperties p=new GestionProperties();;
+        GestionProperties p=new GestionProperties();
+        Granja granja = new Granja();
         String resp;
         String[] valores;
+        boolean personalizado;
         //si hay fichero binario es por que habia partida previa y hay que borrar el bin
         GESTION_BINARIO.eliminarBinarioPartida();
         //preguntamos si quiere personalizar el fichero properties
         System.out.println("¿Quieres personalizar la partida?");
         resp= entrada.nextLine();
-        if (resp.equalsIgnoreCase("si")){
+        personalizado=resp.equalsIgnoreCase("si");
+        if (personalizado){
             System.out.println("Vamos a personalizar los datos");
            //metodo gestion crearfichero personalizado
+            granja.inicializarValores(personalizado);
            valores= p.crearFicheroPropiedadesPersonalizado();
            HuertoGestion h=new HuertoGestion();
            h.crearFicheroHuerto();
@@ -90,7 +87,7 @@ public class Main {
 
     public  static void iniciarComponentes(int filas,int columnas){
         try {
-            RandomAccessFile raf = new RandomAccessFile("resources/huerto.dat", "rw");
+            RandomAccessFile raf = new RandomAccessFile("src/resources/huerto.dat", "rw");
             for (int i = 0; i < filas; i++){
                 for (int j = 0; j < columnas; j++){
                     raf.writeInt(-1);
