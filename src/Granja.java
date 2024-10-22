@@ -138,13 +138,15 @@ public class Granja implements Serializable {
         int duracionEstacion = Integer.parseInt(propiedades.getProperty("duracionestacion"));
         if (diasEnEstacionActual > duracionEstacion) {
             cambiarEstacion();
-            diasEnEstacionActual = 1; // Reiniciar el contador de días en la nueva estación
+            diasEnEstacionActual = 0; // Reiniciar el contador de días en la nueva estación
         }
 
         // 3. Actualizar cultivos o limpiar huerto
         if (estacion == estacionAnterior) {
             h.actualizarHuertoNuevoDia();
         } else {
+            h.inicializarHuerto();
+            System.out.println("Dia" + diaActual + "ahora en estacion" + estacion);
             h.cuidarHuerto();  // Eliminar todos los cultivos si cambió la estación
         }
 
@@ -173,7 +175,7 @@ public class Granja implements Serializable {
 
         // Intentar plantar la semilla en la columna
 
-        h.plantarSemillaColumna(idSemilla, columna); // Método que deberías tener en Huerto
+        h.plantarSemillaColumna(columna,idSemilla); // Método que deberías tener en Huerto
 
 
 
@@ -212,6 +214,7 @@ public class Granja implements Serializable {
         System.out.println("Día actual: " + diaActual);
         System.out.println("Estación actual: " + estacion);
         System.out.println("Presupuesto: " + presupuesto);
+        System.out.println("Dinero disponible: ");
         h.mostrarHuerto();
     }
 

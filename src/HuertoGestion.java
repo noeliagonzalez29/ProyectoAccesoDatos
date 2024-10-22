@@ -143,8 +143,13 @@ public class HuertoGestion implements Serializable {
 
     }
     public void mostrarHuerto() {
+        String filasStr = p.getProperty("filashuerto");
+        String columnasStr = p.getProperty("columnas");
 
         try {
+            int filas = Integer.parseInt(filasStr);
+            int columnas = Integer.parseInt(columnasStr);
+
             RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
             raf.seek(0);
             for (int i = 0; i < filas; i++) {
@@ -203,10 +208,16 @@ public class HuertoGestion implements Serializable {
         return true;
     }
     public void plantarSemillaColumna(int columna, int idSemilla) {
+
         if (!isColumnaVacia(columna)) {
             throw new IllegalArgumentException("La columna no está vacía");
         }
         try {
+            String filasStr = p.getProperty("filashuerto");
+            String columnasStr = p.getProperty("columnas");
+
+            int filas = Integer.parseInt(filasStr);
+            int columnas = Integer.parseInt(columnasStr);
             RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
             for (int i = 0; i < filas; i++) {
                 long posicion = (i * columnas + columna) * LONGITUD;
@@ -221,7 +232,8 @@ public class HuertoGestion implements Serializable {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error al plantar semilla en la columna: " + e.getMessage());
+            System.out.println("Error al plantar semilla en la columna: " + e.getMessage());
+           e.printStackTrace();
         }
     }
 

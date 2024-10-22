@@ -11,11 +11,11 @@ public class Main {
      */
 
     private final static GestionBinario GESTION_BINARIO = new GestionBinario();
-    public static void menuJuego(){
+    public static void menuJuego(Granja granja){
         Scanner entrada= new Scanner(System.in);
         GestionProperties gestion= new GestionProperties();
         int columna = Integer.parseInt(gestion.getProperty("columnas"));
-        Granja granja = new Granja();
+
         String[]valores;
         String resp;
         int opc;
@@ -36,7 +36,7 @@ public class Main {
                     granja.cuidarHuerto();
                     break;
                 case 3:
-                    granja.plantarCultivoColumna(columna);
+                    granja.plantarCultivoColumna(3);
                     break;
                 case 4:
                     granja.venderFrutos();
@@ -68,10 +68,10 @@ public class Main {
         if (personalizado){
             System.out.println("Vamos a personalizar los datos");
            //metodo gestion crearfichero personalizado
-            granja.inicializarValores(personalizado);
-           valores= p.crearFicheroPropiedadesPersonalizado();
-           HuertoGestion h=new HuertoGestion();
-           h.crearFicheroHuerto();
+            //granja.inicializarValores(personalizado);
+            valores= p.crearFicheroPropiedadesPersonalizado();
+            HuertoGestion h=new HuertoGestion();
+            h.crearFicheroHuerto();
 
                 //llamar al metodo de la clase Tienda que maneja la generacion de semillas
 
@@ -81,7 +81,7 @@ public class Main {
 
         }
         iniciarComponentes(Integer.parseInt(valores[0]),Integer.parseInt(valores[1]));
-        menuJuego();
+        menuJuego( new Granja());
 
     }
 
@@ -112,7 +112,7 @@ public class Main {
                 Almacen al = granja.getA();
                 HuertoGestion h= granja.getH();
 
-                menuJuego();
+                menuJuego(granja);
 
 
         }else {
