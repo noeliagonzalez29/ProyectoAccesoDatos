@@ -23,7 +23,7 @@ public class Semilla implements Serializable {
     private int precioCompraSemilla;
     private int precioVentaFruto;
     private int maxFrutos;
-    private ArrayList<Semilla>lSemilla=new ArrayList<>();
+    private ArrayList<Semilla>lSemilla;
 
     public Semilla(int id, String nombre, List<Estacion>estaciones, int diasCrecimiento, int precioCompraSemilla, int precioVentaFruto, int maxFrutos) {
         this.id = id;
@@ -37,6 +37,7 @@ public class Semilla implements Serializable {
 
     public Semilla() {
 
+        this.lSemilla = new ArrayList<>();
     }
 
     public int getId() {
@@ -135,6 +136,10 @@ public class Semilla implements Serializable {
         return lSemilla;
     }
     public Semilla buscarSemillaPorId( int id) {
+        if (lSemilla == null || lSemilla.isEmpty()) {
+            leerSemillas();
+        }
+
         for (Semilla semilla : lSemilla) {
             if (id == semilla.getId()) {
                 return semilla;

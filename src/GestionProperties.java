@@ -27,7 +27,7 @@ public class GestionProperties implements Serializable {
 
             //iniciar componentes
             //depuracion
-            System.out.println("Valores cargados: " + Arrays.toString(valores));
+            //System.out.println("Valores cargados: " + Arrays.toString(valores));
 
 
             //llamar al metodo de la clase Tienda que maneja la generacion de semillas

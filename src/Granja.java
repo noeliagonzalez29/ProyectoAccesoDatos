@@ -42,11 +42,7 @@ public class Granja implements Serializable {
         this.a = a;
     }
 
-    public Granja(int diaActual, Estacion estacion, int presupuesto) {
-        this.diaActual = diaActual;
-        this.estacion = estacion;
-        this.presupuesto = presupuesto;
-    }
+
 
     public Granja() {
         this.h= new HuertoGestion();
@@ -57,6 +53,7 @@ public class Granja implements Serializable {
         this.propiedades=new GestionProperties();
         this.diaActual=1;
         this.diasEnEstacionActual=1;
+        inicializarValores(false);
 
     }
     public void inicializarValores(boolean personalizado) {
@@ -70,8 +67,17 @@ public class Granja implements Serializable {
         // Inicializar valores desde el array
         this.presupuesto = Integer.parseInt(valores[2]);
         this.estacion = Estacion.valueOf(valores[3].toUpperCase());
-        // Si necesitas inicializar el huerto con filas y columnas:
-        this.h.inicializarHuerto();
+        // Inicializar la tienda con las semillas de la estación actual
+        List<Semilla> todasLasSemillas = semilla.leerSemillas();
+        for (Semilla s : todasLasSemillas) {
+            if (s.getEstaciones().contains(this.estacion)) {
+                semillasDisponibles.add(s);
+            }
+        }
+        // Inicializar la tienda con las semillas disponibles
+        t.agregarSemillasPorEstacion(estacion.toString(), semillasDisponibles);
+        t.generarSemillasDelDia(estacion.toString());
+        h.inicializarHuerto();
     }
 
     public int getDiaActual() {
@@ -161,26 +167,67 @@ public class Granja implements Serializable {
         h.cuidarHuerto();
     }
     public void plantarCultivoColumna ( int columna){
-        // Mostrar las semillas disponibles para plantar
-        List<Semilla> semillasDisponibles = semilla.leerSemillas();
+        Scanner entrada= new Scanner(System.in);
+        String columnasStr = propiedades.getProperty("columnas");
+        String filasStr = propiedades.getProperty("filashuerto");
+        int columnas = Integer.parseInt(columnasStr);
+        int filas = Integer.parseInt(filasStr);
+
+       // Obtener semillas disponibles del día
+        List<Semilla> semillasDiarias = t.getSemillasDelDia();
+        List<Semilla> semillasComprables = new ArrayList<>();
         System.out.println("Semillas disponibles para plantar:");
         for (Semilla semilla : semillasDisponibles) {
             System.out.println("ID: " + semilla.getId() + ", Nombre: " + semilla.getNombre() + ", Días de Crecimiento: " + semilla.getDiasCrecimiento());
         }
-
+        // Calcular costo total por semilla para toda la columna
+        System.out.println("Semillas disponibles para plantar:");
+        for (Semilla semilla : semillasDiarias) {
+            int costoTotal = semilla.getPrecioCompraSemilla() * filas;
+            if (costoTotal <= presupuesto) {
+                semillasComprables.add(semilla);
+                System.out.println("ID: " + semilla.getId() +
+                        ", Nombre: " + semilla.getNombre() +
+                        ", Costo total para la columna: " + costoTotal +
+                        ", Días de crecimiento: " + semilla.getDiasCrecimiento());
+            }
+        }
+        if (semillasComprables.isEmpty()) {
+            System.out.println("No tienes suficiente presupuesto para comprar ninguna semilla.");
+            return;
+        }
         // Pedir al usuario que seleccione una semilla
         Scanner scanner = new Scanner(System.in);
         System.out.println("Ingrese el ID de la semilla que desea plantar en la columna " + columna + ":");
         int idSemilla = scanner.nextInt();
+        // Verificar que la semilla seleccionada existe y es comprable
+        Semilla semillaSeleccionada = null;
+        for (Semilla s : semillasComprables) {
+            if (s.getId() == idSemilla) {
+                semillaSeleccionada = s;
+                break;
+            }
+        }
 
-        // Intentar plantar la semilla en la columna
+        if (semillaSeleccionada == null) {
+            System.out.println("Error: Semilla no válida o no puedes permitirte comprarla.");
+            return;
+        }
 
-        h.plantarSemillaColumna(columna,idSemilla); // Método que deberías tener en Huerto
+        // Calcular costo total y actualizar presupuesto
+        int costoTotal = semillaSeleccionada.getPrecioCompraSemilla() * filas;
+        presupuesto -= costoTotal;
 
+        // Plantar la semilla en toda la columna usando el método de HuertoGestion
+        h.plantarSemillaColumna(columna, idSemilla);
 
-
-
+        System.out.println("Se ha plantado " + semillaSeleccionada.getNombre() +
+                " en toda la columna " + columna +
+                ". Costo total: " + costoTotal +
+                ". Presupuesto restante: " + presupuesto);
     }
+
+
     public void venderFrutos () {
         // Obtener los frutos del almacén
         Map<Semilla, Integer> frutosEnAlmacen = a.obtenerAlmacen(); // Método que debes implementar en Almacen

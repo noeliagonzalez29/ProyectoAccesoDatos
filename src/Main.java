@@ -36,7 +36,15 @@ public class Main {
                     granja.cuidarHuerto();
                     break;
                 case 3:
-                    granja.plantarCultivoColumna(3);
+                    System.out.println("¿en qué columna quiere plantar?");
+                    columna= entrada.nextInt();
+                    if (granja.getH().isColumnaVacia(columna)){
+                        granja.plantarCultivoColumna(columna);
+                    }else{
+                        System.out.println("NO puedes plantar aquí columna OCUPADA");
+                    }
+
+
                     break;
                 case 4:
                     granja.venderFrutos();
@@ -55,7 +63,7 @@ public class Main {
     public static void nuevaPartida() {
         Scanner entrada= new Scanner(System.in);
         GestionProperties p=new GestionProperties();
-        Granja granja = new Granja();
+        Granja granja ;
         String resp;
         String[] valores;
         boolean personalizado;
@@ -81,7 +89,9 @@ public class Main {
 
         }
         iniciarComponentes(Integer.parseInt(valores[0]),Integer.parseInt(valores[1]));
-        menuJuego( new Granja());
+        granja= new Granja();
+        granja.inicializarValores(personalizado);
+        menuJuego( granja);
 
     }
 

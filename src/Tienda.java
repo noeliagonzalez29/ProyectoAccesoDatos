@@ -82,5 +82,9 @@ public Map<String,List<Semilla>>generarNuevaTienda(List<Semilla>semillasDisponib
         }
         return dineroDisponible;
     }
+
+    public List<Semilla> getSemillasDelDia() {
+        return semillasDelDia;
+    }
 }
 
