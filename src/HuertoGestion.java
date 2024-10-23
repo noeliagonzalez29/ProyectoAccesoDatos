@@ -70,6 +70,7 @@ public class HuertoGestion implements Serializable {
             abrirConexion();
             s.leerSemillas();
             // Iterar por cada celda del huerto
+            raf.seek(0);
             for (int i = 0; i < filas; i++) {
                 for (int j = 0; j < columnas; j++) {
                     long posicion = (i * columnas + j) * LONGITUD; // Calcula la posición en el archivo
@@ -81,19 +82,19 @@ public class HuertoGestion implements Serializable {
 
                     // Si hay una semilla plantada (id != -1)
                     if (id != -1) {
-                        Semilla semillaActual= s.buscarSemillaPorId(id);
-                        if (semillaActual!=null){
-                            diasPlantado++;
-                            System.out.println("Cuidando semilla en posición (" + i + ", " + j +
-                                    "), ID: " + id + ", Días plantado: " + diasPlantado +
-                                    ", Días necesarios: " + semillaActual.getDiasCrecimiento());
+                        Semilla semillaActual = s.buscarSemillaPorId(id);
+                        if (semillaActual != null) {
+                            //diasPlantado++;
+                            //   System.out.println("Cuidando semilla en posición (" + i + ", " + j +
+                            //          "), ID: " + id + ", Días plantado: " + diasPlantado +
+                            //        ", Días necesarios: " + semillaActual.getDiasCrecimiento());
 
 
                             // Actualiza la celda para reflejar el nuevo estado
                             raf.seek(posicion);
                             raf.writeInt(id);
                             raf.writeBoolean(true); // Se marca como no regada para el siguiente ciclo
-                            raf.writeInt(diasPlantado);
+                            //raf.writeInt(diasPlantado);
 
 
                             if (diasPlantado >= semillaActual.getDiasCrecimiento()) {
@@ -110,14 +111,14 @@ public class HuertoGestion implements Serializable {
                                 raf.seek(posicion);
                                 raf.writeInt(-1);
                                 raf.writeBoolean(false);
-                                raf.writeInt(-1);
+                                raf.writeInt(0);
                             }
                         }
+                    }
+                    }
 
 
                     }
-                }
-            }
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -128,7 +129,7 @@ public class HuertoGestion implements Serializable {
        // cerrarConexion();
     }
     public void actualizarHuertoNuevoDia() {
-
+//poner la lectura de filas y columnas
         try {
             RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
 
@@ -140,12 +141,15 @@ public class HuertoGestion implements Serializable {
                     boolean regado = raf.readBoolean();
                     int diasPlantado = raf.readInt();
 
-                    if (id != -1) {
+                    if (regado==true) {
+                        diasPlantado++;
                         raf.seek(posicion + LONGITUD_INT);
                         raf.writeBoolean(false);
+                        raf.writeInt(diasPlantado);
                     }
                 }
             }
+
         } catch (IOException e) {
             throw new RuntimeException("Error al actualizar el huerto para el nuevo día: " + e.getMessage());
         }

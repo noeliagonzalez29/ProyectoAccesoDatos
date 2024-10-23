@@ -51,7 +51,7 @@ public class Granja implements Serializable {
         this.semillasDisponibles= new ArrayList<>();
         this.t= new Tienda();
         this.propiedades=new GestionProperties();
-        this.diaActual=1;
+        this.diaActual=0;
         this.diasEnEstacionActual=1;
         inicializarValores(false);
 
@@ -133,23 +133,27 @@ public class Granja implements Serializable {
 
     }
     public void iniciarNuevoDia () {
+
         estacion= Estacion.valueOf(propiedades.getProperty("estacioninicio"));
         Estacion estacionAnterior = estacion;
 
         // 1. Actualizar el contador de días
-        diaActual++;
-        diasEnEstacionActual++;
+       diaActual++;
+       diasEnEstacionActual++;
 
         // 2. Verificar si es necesario cambiar de estación
         int duracionEstacion = Integer.parseInt(propiedades.getProperty("duracionestacion"));
-        if (diasEnEstacionActual > duracionEstacion) {
+        if (diasEnEstacionActual >= duracionEstacion) {
             cambiarEstacion();
             diasEnEstacionActual = 0; // Reiniciar el contador de días en la nueva estación
+            h.actualizarHuertoNuevoDia();
         }
 
         // 3. Actualizar cultivos o limpiar huerto
         if (estacion == estacionAnterior) {
+           // diaActual++;
             h.actualizarHuertoNuevoDia();
+
         } else {
             h.inicializarHuerto();
             System.out.println("Dia" + diaActual + "ahora en estacion" + estacion);
@@ -160,6 +164,8 @@ public class Granja implements Serializable {
         t.generarSemillasDelDia(String.valueOf(estacion));
         // Opcional: Mostrar información del nuevo día o estación
         System.out.println("Día " + diaActual + " en la estación " + estacion);
+
+
     }
 
 
@@ -246,8 +252,8 @@ public class Granja implements Serializable {
 
             gananciasTotales += totalVenta;
 
-
-
+            int presu= Integer.parseInt(propiedades.getProperty("presupuesto"));
+            t.venderSemillas(presu);
             // Limpiar los frutos vendidos del almacén
             a.eliminarFrutos(semi.getId()); // Método para eliminar los frutos vendidos
 

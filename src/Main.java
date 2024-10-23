@@ -44,10 +44,10 @@ public class Main {
                         System.out.println("NO puedes plantar aquí columna OCUPADA");
                     }
 
-
                     break;
                 case 4:
                     granja.venderFrutos();
+
                     break;
                 case 5:
                     granja.mostrarGranja();
