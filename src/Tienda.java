@@ -2,8 +2,10 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Tienda implements Serializable {
+    private static final long serialVersionUID = 5970610966714932501L;
     private Map<String, List<Semilla>> tiendaEstacion;
-    private List<Semilla> semillasDelDia;
+    private  List<Semilla> semillasDelDia;
+
 
     public Tienda() {
         this.tiendaEstacion = new HashMap<>();
@@ -47,43 +49,21 @@ public Map<String,List<Semilla>>generarNuevaTienda(List<Semilla>semillasDisponib
         // Obtener las semillas de la estación actual
         List<Semilla> semillasEstacion = tiendaEstacion.get(estacionActual);
 
-
         Random random = new Random();
-        while (semillasDelDia.size() < 3 && semillasEstacion.size() > 0) {
+        Set<Semilla>sUnicas= new HashSet<>();
+        while (sUnicas.size() < 3 && semillasEstacion.size() > 0) {
             int index = random.nextInt(semillasEstacion.size());
             Semilla semilla = semillasEstacion.get(index);
-            if (!semillasDelDia.contains(semilla)) {
-                semillasDelDia.add(semilla);
-            }
+            //if (!semillasDelDia.contains(semilla)) {
+                sUnicas.add(semilla);
+           // }
         }
+        semillasDelDia.addAll(sUnicas);
     }
 
-    public int venderSemillas(int dineroDisponible) {
-        Scanner entrada = new Scanner(System.in);
-        System.out.println("Semillas disponibles hoy:");
-        for (int i = 0; i < semillasDelDia.size(); i++) {
-            Semilla s = semillasDelDia.get(i);
-            System.out.println((i + 1) + ". " + s.getNombre() + " - Precio: " + s.getPrecioCompraSemilla());
-        }
-        System.out.println("¿Qué semilla quieres comprar? (Ingresa el número)");
-        int seleccion = entrada.nextInt();
-        Semilla semillaSeleccionada = semillasDelDia.get(seleccion - 1);
-        System.out.println("¿Cuántas semillas de " + semillaSeleccionada.getNombre() + " quieres comprar?");
-        int cantidad = entrada.nextInt();
-        int total = cantidad * semillaSeleccionada.getPrecioCompraSemilla();
-        if (dineroDisponible >= total) {
-            dineroDisponible -= total;
-            System.out.println("Has comprado " + cantidad + " " + semillaSeleccionada.getNombre() +
-                    " por un total de " + total + ". Te quedan " + dineroDisponible + " monedas.");
-            // Agregar la lógica para añadir las semillas compradas al inventario del jugador
-        } else {
-            System.out.println("No tienes suficiente dinero. Necesitas " + total +
-                    " monedas, pero solo tienes " + dineroDisponible + ".");
-        }
-        return dineroDisponible;
-    }
 
     public List<Semilla> getSemillasDelDia() {
+
         return semillasDelDia;
     }
 }

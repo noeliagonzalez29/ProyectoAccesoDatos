@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Semilla implements Serializable {
     private final static String RUTA_FICH_XML= "src/resources/semillas.xml";
@@ -147,4 +148,18 @@ public class Semilla implements Serializable {
         }
         return null;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Semilla semilla = (Semilla) o;
+        return id == semilla.id;  // Comparar basándose en el id
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);  // Generar hash basándose en el id
+    }
+
 }

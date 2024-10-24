@@ -105,7 +105,7 @@ public class HuertoGestion implements Serializable {
                                         ") está lista para cosechar. Frutos obtenidos: " + maxFrutos);
 
                                 // Almacenar los frutos
-                                a.guardarFrutos(semillaActual, maxFrutos);
+                               // a.añadirCosecha();
 
                                 // Limpiar la celda
                                 raf.seek(posicion);
@@ -129,10 +129,14 @@ public class HuertoGestion implements Serializable {
        // cerrarConexion();
     }
     public void actualizarHuertoNuevoDia() {
-//poner la lectura de filas y columnas
-        try {
-            RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
 
+        String filasStr = p.getProperty("filashuerto");
+        String columnasStr = p.getProperty("columnas");
+        try {
+            int filas = Integer.parseInt(filasStr);
+            int columnas = Integer.parseInt(columnasStr);
+           // RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
+            abrirConexion();
             raf.seek(0);
             for (int i = 0; i < filas; i++) {
                 for (int j = 0; j < columnas; j++) {
@@ -146,7 +150,38 @@ public class HuertoGestion implements Serializable {
                         raf.seek(posicion + LONGITUD_INT);
                         raf.writeBoolean(false);
                         raf.writeInt(diasPlantado);
+                    }else if((id!=-1) && (regado==false)){
+                        diasPlantado++;
+                        raf.seek(posicion + LONGITUD_INT);
+                        raf.writeBoolean(false);
+                        raf.writeInt(diasPlantado);
                     }
+                    /*
+                    // Verificar si la semilla está lista para cosechar
+                    if (id != -1) {
+                        Semilla semillaActual = s.buscarSemillaPorId(id);
+                        if (semillaActual != null && diasPlantado >= semillaActual.getDiasCrecimiento()) {
+                            // La semilla está lista para cosechar
+                            int maxFrutos = semillaActual.getMaxFrutos();
+                            System.out.println("La semilla en (" + i + ", " + j +
+                                    ") está lista para cosechar. Frutos obtenidos: " + maxFrutos);
+
+                            // Almacenar los frutos
+                            a.guardarFrutos(semillaActual, maxFrutos);
+
+                            // Limpiar la celda
+                            raf.seek(posicion);
+                            raf.writeInt(-1);
+                            raf.writeBoolean(false);
+                            raf.writeInt(0);
+                        } else {
+                            // Si no está lista, actualizar los días plantados en el archivo
+                            raf.seek(posicion + LONGITUD_INT * 2); // Move to diasPlantado position
+                            raf.writeInt(diasPlantado);
+                        }
+                    }
+                     */
+
                 }
             }
 
@@ -231,11 +266,9 @@ public class HuertoGestion implements Serializable {
         return true;
     }
     public void plantarSemillaColumna(int columna, int idSemilla) {
-
+        String filasStr = p.getProperty("filashuerto");
+        String columnasStr = p.getProperty("columnas");
         try {
-            String filasStr = p.getProperty("filashuerto");
-            String columnasStr = p.getProperty("columnas");
-
             int filas = Integer.parseInt(filasStr);
             int columnas = Integer.parseInt(columnasStr);
            // RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
@@ -282,21 +315,7 @@ public class HuertoGestion implements Serializable {
         }
     }
 
-    public void venderFrutos() {
-        Map<Semilla, Integer> almacen = a.obtenerAlmacen(); // Obtenemos el almacén con id y cantidad
-        int gananciasTotales = 0;
 
-        for (Semilla semilla : almacen.keySet()) {
-            int cantidad = almacen.get(semilla);  // Obtenemos la cantidad del fruto para esa semilla
-            int precioVenta = semilla.getPrecioVentaFruto(); // Obtenemos el precio de venta del fruto
-            int ganancias = precioVenta * cantidad;          // Calculamos las ganancias
-
-            System.out.println("Se han vendido " + cantidad + " unidades de " + semilla.getNombre() + " por " + ganancias + " euros.");
-            gananciasTotales += ganancias;
-        }
-
-        System.out.println("Ganancias totales: " + gananciasTotales + " euros.");
-    }
 
 
 }

@@ -146,16 +146,17 @@ public class Granja implements Serializable {
         if (diasEnEstacionActual >= duracionEstacion) {
             cambiarEstacion();
             diasEnEstacionActual = 0; // Reiniciar el contador de días en la nueva estación
-            h.actualizarHuertoNuevoDia();
+           // h.actualizarHuertoNuevoDia();
         }
 
         // 3. Actualizar cultivos o limpiar huerto
         if (estacion == estacionAnterior) {
-           // diaActual++;
+           //diaActual++;
             h.actualizarHuertoNuevoDia();
 
         } else {
-            h.inicializarHuerto();
+           h.inicializarHuerto();
+
             System.out.println("Dia" + diaActual + "ahora en estacion" + estacion);
             h.cuidarHuerto();  // Eliminar todos los cultivos si cambió la estación
         }
@@ -171,6 +172,7 @@ public class Granja implements Serializable {
 
     public void cuidarHuerto () {
         h.cuidarHuerto();
+
     }
     public void plantarCultivoColumna ( int columna){
         Scanner entrada= new Scanner(System.in);
@@ -182,10 +184,13 @@ public class Granja implements Serializable {
        // Obtener semillas disponibles del día
         List<Semilla> semillasDiarias = t.getSemillasDelDia();
         List<Semilla> semillasComprables = new ArrayList<>();
+        /*
         System.out.println("Semillas disponibles para plantar:");
         for (Semilla semilla : semillasDisponibles) {
             System.out.println("ID: " + semilla.getId() + ", Nombre: " + semilla.getNombre() + ", Días de Crecimiento: " + semilla.getDiasCrecimiento());
         }
+         */
+
         // Calcular costo total por semilla para toda la columna
         System.out.println("Semillas disponibles para plantar:");
         for (Semilla semilla : semillasDiarias) {
@@ -211,7 +216,7 @@ public class Granja implements Serializable {
         for (Semilla s : semillasComprables) {
             if (s.getId() == idSemilla) {
                 semillaSeleccionada = s;
-                break;
+
             }
         }
 
@@ -234,34 +239,19 @@ public class Granja implements Serializable {
     }
 
 
-    public void venderFrutos () {
-        // Obtener los frutos del almacén
-        Map<Semilla, Integer> frutosEnAlmacen = a.obtenerAlmacen(); // Método que debes implementar en Almacen
-        double gananciasTotales = 0.0; // Inicializar ganancias totales
+    public void venderFrutosGranja () {
+
+        a.mostrarAlmacen();
 
         System.out.println("Ventas de frutos:");
 
-        for (Semilla semi : frutosEnAlmacen.keySet()) {
+        a.venderFrutos();
 
-            int cantidad = frutosEnAlmacen.get(semi); // Cantidad de frutos
-            double precioVenta = semilla.getPrecioVentaFruto();
-            double totalVenta = precioVenta * cantidad;
 
-            // Mostrar la información de la venta
-            System.out.println("Se han vendido " + cantidad + " unidades de " + semilla.getNombre() + " por " + totalVenta + " euros.");
 
-            gananciasTotales += totalVenta;
-
-            int presu= Integer.parseInt(propiedades.getProperty("presupuesto"));
-            t.venderSemillas(presu);
-            // Limpiar los frutos vendidos del almacén
-            a.eliminarFrutos(semi.getId()); // Método para eliminar los frutos vendidos
-
-        }
-
-        // Mostrar las ganancias totales
-        System.out.println("Ganancias totales: " + gananciasTotales + " euros.");
     }
+
+
     public void mostrarGranja() {
         System.out.println("Estado de la granja:");
         System.out.println("Día actual: " + diaActual);

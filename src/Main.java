@@ -46,8 +46,7 @@ public class Main {
 
                     break;
                 case 4:
-                    granja.venderFrutos();
-
+                    granja.venderFrutosGranja();
                     break;
                 case 5:
                     granja.mostrarGranja();

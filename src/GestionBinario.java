@@ -2,7 +2,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class GestionBinario {
+public class GestionBinario  {
     private final static String RUTA_FICHE_BIN= "src/resources/stardam_valley.bin";
 
     public void crearFicheroBinario(){
