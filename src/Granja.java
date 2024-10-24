@@ -1,10 +1,5 @@
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Granja implements Serializable {
     private int diaActual;
@@ -171,7 +166,9 @@ public class Granja implements Serializable {
 
 
     public void cuidarHuerto () {
-        h.cuidarHuerto();
+
+        Map<Semilla, Integer> cosecha = h.cuidarHuerto();
+        a.aniadirCosecha(cosecha);
 
     }
     public void plantarCultivoColumna ( int columna){
@@ -246,6 +243,7 @@ public class Granja implements Serializable {
         System.out.println("Ventas de frutos:");
 
         a.venderFrutos();
+        h.mostrarHuerto();
 
 
 

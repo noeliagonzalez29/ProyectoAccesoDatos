@@ -8,17 +8,15 @@ public class HuertoGestion implements Serializable {
     private transient RandomAccessFile raf;
     private int filas;
     private int columnas;
-    private static final int LONGITUD_INT= 4;
-    private  static  final int LONGITUD_BOOLEAN=1;
-    private static final int LONGITUD= LONGITUD_INT + LONGITUD_BOOLEAN +LONGITUD_INT;
-    private GestionProperties p= new GestionProperties();
+    private static final int LONGITUD_INT = 4;
+    private static final int LONGITUD_BOOLEAN = 1;
+    private static final int LONGITUD = LONGITUD_INT + LONGITUD_BOOLEAN + LONGITUD_INT;
+    private GestionProperties p = new GestionProperties();
     private Semilla s;
-    private Almacen a;
 
     public HuertoGestion() {
         this.p = new GestionProperties();
         this.s = new Semilla();
-        this.a = new Almacen();
         inicializarHuerto();
     }
 
@@ -31,7 +29,8 @@ public class HuertoGestion implements Serializable {
             throw new RuntimeException("Error al abrir el archivo: " + e.getMessage());
         }
     }
-    public void inicializarHuerto(){
+
+    public void inicializarHuerto() {
         String filasStr = p.getProperty("filashuerto");
         String columnasStr = p.getProperty("columnas");
 
@@ -41,8 +40,8 @@ public class HuertoGestion implements Serializable {
             int columnas = Integer.parseInt(columnasStr);
             //RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
             abrirConexion();
-            for (int i= 0; i<filas; i++){
-                for (int j=0; j<columnas; j++){
+            for (int i = 0; i < filas; i++) {
+                for (int j = 0; j < columnas; j++) {
                     raf.writeInt(-1);
                     raf.writeBoolean(false);
                     raf.writeInt(-1);
@@ -59,7 +58,8 @@ public class HuertoGestion implements Serializable {
 
     }
 
-    public void cuidarHuerto(){
+    public Map<Semilla, Integer> cuidarHuerto() {
+        Map<Semilla, Integer> cosecha = new HashMap<>();
         String filasStr = p.getProperty("filashuerto");
         String columnasStr = p.getProperty("columnas");
 
@@ -99,13 +99,14 @@ public class HuertoGestion implements Serializable {
 
                             if (diasPlantado >= semillaActual.getDiasCrecimiento()) {
                                 // La semilla está lista para cosechar
+
                                 int maxFrutos = semillaActual.getMaxFrutos();
 
                                 System.out.println("La semilla en (" + i + ", " + j +
                                         ") está lista para cosechar. Frutos obtenidos: " + maxFrutos);
 
                                 // Almacenar los frutos
-                               // a.añadirCosecha();
+                                cosecha.put(semillaActual,cosecha.getOrDefault(semillaActual,0) + maxFrutos);
 
                                 // Limpiar la celda
                                 raf.seek(posicion);
@@ -115,19 +116,20 @@ public class HuertoGestion implements Serializable {
                             }
                         }
                     }
-                    }
+                }
 
 
-                    }
+            }
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-       // cerrarConexion();
+        return cosecha;
+        // cerrarConexion();
     }
+
     public void actualizarHuertoNuevoDia() {
 
         String filasStr = p.getProperty("filashuerto");
@@ -135,7 +137,7 @@ public class HuertoGestion implements Serializable {
         try {
             int filas = Integer.parseInt(filasStr);
             int columnas = Integer.parseInt(columnasStr);
-           // RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
+            // RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
             abrirConexion();
             raf.seek(0);
             for (int i = 0; i < filas; i++) {
@@ -145,12 +147,12 @@ public class HuertoGestion implements Serializable {
                     boolean regado = raf.readBoolean();
                     int diasPlantado = raf.readInt();
 
-                    if (regado==true) {
+                    if (regado == true) {
                         diasPlantado++;
                         raf.seek(posicion + LONGITUD_INT);
                         raf.writeBoolean(false);
                         raf.writeInt(diasPlantado);
-                    }else if((id!=-1) && (regado==false)){
+                    } else if ((id != -1) && (regado == false)) {
                         diasPlantado++;
                         raf.seek(posicion + LONGITUD_INT);
                         raf.writeBoolean(false);
@@ -190,6 +192,7 @@ public class HuertoGestion implements Serializable {
         }
 
     }
+
     public void mostrarHuerto() {
         String filasStr = p.getProperty("filashuerto");
         String columnasStr = p.getProperty("columnas");
@@ -244,7 +247,7 @@ public class HuertoGestion implements Serializable {
             //raf.seek(0);
             abrirConexion();
             //QUIERO asegurarme que el usuario no me diga una columna fuera de rango
-            if (columna<0 || columna>=columnas){
+            if (columna < 0 || columna >= columnas) {
                 System.out.println("Columna fuera de rango");
             }
 
@@ -265,27 +268,28 @@ public class HuertoGestion implements Serializable {
 
         return true;
     }
+
     public void plantarSemillaColumna(int columna, int idSemilla) {
         String filasStr = p.getProperty("filashuerto");
         String columnasStr = p.getProperty("columnas");
         try {
             int filas = Integer.parseInt(filasStr);
             int columnas = Integer.parseInt(columnasStr);
-           // RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
+            // RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
             abrirConexion();
             for (int i = 0; i < filas; i++) {
                 long posicion = (i * columnas + columna) * LONGITUD;
 
-                    raf.seek(posicion);
-                    raf.writeInt(idSemilla);
-                    raf.writeBoolean(false);
-                    raf.writeInt(0);
+                raf.seek(posicion);
+                raf.writeInt(idSemilla);
+                raf.writeBoolean(false);
+                raf.writeInt(0);
 
             }
 
         } catch (IOException e) {
             System.out.println("Error al plantar semilla en la columna: " + e.getMessage());
-           e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -299,12 +303,14 @@ public class HuertoGestion implements Serializable {
             }
         }
     }
+
     public void eliminarFicheroHuerto() {
         File file = new File(RUTA_HUERTO);
         if (file.exists()) {
             file.delete();
         }
     }
+
     public void cerrarConexion() {
         try {
             if (raf != null) {
@@ -314,8 +320,6 @@ public class HuertoGestion implements Serializable {
             throw new RuntimeException("Error al cerrar la conexión del huerto: " + e.getMessage());
         }
     }
-
-
 
 
 }

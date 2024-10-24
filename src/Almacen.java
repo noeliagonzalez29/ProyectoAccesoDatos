@@ -1,7 +1,6 @@
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 public class Almacen implements Serializable {
 
@@ -14,7 +13,7 @@ public class Almacen implements Serializable {
 
 
         // Método para añadir nueva cosecha
-        public void añadirCosecha(Map<Semilla, Integer> nuevaCosecha) {
+        public Map<Semilla, Integer> aniadirCosecha(Map<Semilla, Integer> nuevaCosecha) {
             for (Semilla semilla : nuevaCosecha.keySet()) {
                 Integer cantidad = nuevaCosecha.get(semilla);
 
@@ -27,6 +26,7 @@ public class Almacen implements Serializable {
                 }
             }
             System.out.println("Cosecha añadida exitosamente.");
+            return nuevaCosecha;
         }
 
         // Método para mostrar el contenido del almacén
@@ -42,7 +42,7 @@ public class Almacen implements Serializable {
         }
 
         // Método de venta
-        public void venderFrutos() {
+        public int venderFrutos() {
             int gananciasTotal=0;
             for (Map.Entry<Semilla,Integer> entry: frutos.entrySet()){
                 Semilla semilla= entry.getKey();
@@ -57,6 +57,7 @@ public class Almacen implements Serializable {
                     System.out.println("Se han vendido" + cantidadF + "de" + semilla.getNombre()+ "por" + ganancias + "euros.");
                 }
             }
+            return  gananciasTotal;
         }
 
 }
