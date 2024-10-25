@@ -112,7 +112,7 @@ public class HuertoGestion implements Serializable {
                                 raf.seek(posicion);
                                 raf.writeInt(-1);
                                 raf.writeBoolean(false);
-                                raf.writeInt(0);
+                                raf.writeInt(-1);
                             }
                         }
                     }
@@ -221,7 +221,7 @@ public class HuertoGestion implements Serializable {
 
                     int diasNuevo;
                     if (diasPlantado == -1) {
-                        diasNuevo = 0;
+                        diasNuevo = -1;
                     } else {
                         diasNuevo = diasPlantado;
                     }

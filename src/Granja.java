@@ -5,6 +5,7 @@ public class Granja implements Serializable {
     private int diaActual;
     private Estacion estacion;
     private int presupuesto;
+    private int gananciasAcumuladas;
     private Tienda t;
     private HuertoGestion h;
     private Almacen a;
@@ -224,7 +225,11 @@ public class Granja implements Serializable {
 
         // Calcular costo total y actualizar presupuesto
         int costoTotal = semillaSeleccionada.getPrecioCompraSemilla() * filas;
-        presupuesto -= costoTotal;
+        //contemplar que haya tenido una venta:
+       // version antes: presupuesto -= costoTotal;
+       // int gananciasVenta= getPresupuesto() + a.venderFrutos();
+       // gananciasVenta-= costoTotal;
+        actualizarPresupuesto(-costoTotal);
 
         // Plantar la semilla en toda la columna usando el método de HuertoGestion
         h.plantarSemillaColumna(columna, idSemilla);
@@ -237,26 +242,29 @@ public class Granja implements Serializable {
 
 
     public void venderFrutosGranja () {
-
         a.mostrarAlmacen();
-
-        System.out.println("Ventas de frutos:");
-
-        a.venderFrutos();
+       // a.venderFrutos();
+        int gananciasVenta= a.venderFrutos();
+        presupuesto += gananciasVenta;
+        //actualizarPresupuesto(gananciasVenta);
+        gananciasAcumuladas += gananciasVenta;
+        System.out.println("Tras la venta tengo: " + presupuesto + " € gracias a las ventas");
         h.mostrarHuerto();
-
-
 
     }
 
-
+    //metodo para actualizar el presupuesto si vendo (gano) o compro semilla(pierdo). Privado para usarlo solo aqui
+    private void actualizarPresupuesto(int cantidad){
+        presupuesto+=cantidad;
+    }
     public void mostrarGranja() {
-        System.out.println("Estado de la granja:");
+
+        System.out.println("----------- ESTADO DE LA GRANJA ---------");
         System.out.println("Día actual: " + diaActual);
         System.out.println("Estación actual: " + estacion);
-        System.out.println("Presupuesto: " + presupuesto);
-        System.out.println("Dinero disponible: ");
+        System.out.println("Presupuesto: " + presupuesto  + " € ");
         h.mostrarHuerto();
+        a.mostrarAlmacen();
     }
 
 
