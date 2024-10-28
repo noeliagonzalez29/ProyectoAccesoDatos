@@ -22,6 +22,7 @@ public class HuertoGestion implements Serializable {
     private GestionProperties p;
     private Semilla s;
 
+
     /**
      * Constructor de la clase {@code GestionFicheros.HuertoGestion}.
      * Inicializa las propiedades del huerto y crea un nuevo objeto {@code Clases.Semilla}.
@@ -29,6 +30,7 @@ public class HuertoGestion implements Serializable {
     public HuertoGestion() {
         this.p = GestionProperties.getInstancia();
         this.s = new Semilla();
+        abrirConexion();
         inicializarHuerto();
     }
 
@@ -53,12 +55,13 @@ public class HuertoGestion implements Serializable {
      * establece cada celda con valores predeterminados.
      */
     public void inicializarHuerto() {
+
         String filasStr = p.getProperty("filashuerto");
         String columnasStr = p.getProperty("columnas");
         try {
             int filas = Integer.parseInt(filasStr);
             int columnas = Integer.parseInt(columnasStr);
-            abrirConexion();
+
             raf.seek(0);
             for (int i = 0; i < filas; i++) {
                 for (int j = 0; j < columnas; j++) {
@@ -74,6 +77,7 @@ public class HuertoGestion implements Serializable {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
+
     }
 
     /**
@@ -90,8 +94,6 @@ public class HuertoGestion implements Serializable {
         try {
             int filas = Integer.parseInt(filasStr);
             int columnas = Integer.parseInt(columnasStr);
-            //RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
-            abrirConexion();
             s.leerSemillas();
             // Iterar por cada celda del huerto
             raf.seek(0);
@@ -140,6 +142,7 @@ public class HuertoGestion implements Serializable {
             throw new RuntimeException(e);
         }
         return cosecha;
+
     }
 
     /**
@@ -150,11 +153,10 @@ public class HuertoGestion implements Serializable {
 
         String filasStr = p.getProperty("filashuerto");
         String columnasStr = p.getProperty("columnas");
+        abrirConexion();
         try {
             int filas = Integer.parseInt(filasStr);
             int columnas = Integer.parseInt(columnasStr);
-            // RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
-            abrirConexion();
             raf.seek(0);
             for (int i = 0; i < filas; i++) {
                 for (int j = 0; j < columnas; j++) {
@@ -189,6 +191,7 @@ public class HuertoGestion implements Serializable {
      * imprimiendo los detalles de cada celda.
      */
     public void mostrarHuerto() {
+
         String filasStr = p.getProperty("filashuerto");
         String columnasStr = p.getProperty("columnas");
 
@@ -203,8 +206,6 @@ public class HuertoGestion implements Serializable {
                     int id = raf.readInt();
                     boolean regado = raf.readBoolean();
                     int diasPlantado = raf.readInt();
-
-
                     String idNuevo;
                     if (id == -1) {
                         idNuevo = "SS";
@@ -221,14 +222,16 @@ public class HuertoGestion implements Serializable {
                         diasNuevo = diasPlantado;
                     }
 
-                    // Formatear la salida sin utilizar especificadores
                     System.out.print("[" + idNuevo + ", " + regadoNuevo + ", " + diasNuevo + "] ");
+
                 }
                 System.out.println();
+
             }
         } catch (IOException e) {
             throw new RuntimeException("Error al mostrar el huerto: " + e.getMessage());
         }
+
     }
 
     /**
@@ -256,7 +259,6 @@ public class HuertoGestion implements Serializable {
                 }
             }
         } catch (IOException e) {
-            //throw new RuntimeException("Error al verificar si la columna está vacía: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -277,6 +279,7 @@ public class HuertoGestion implements Serializable {
             System.out.println("Columna fuera de rango. Debe estar entre 0 y " + (columnas - 1));
             return false;
         }
+
         return true;
     }
 
@@ -287,13 +290,12 @@ public class HuertoGestion implements Serializable {
      * @param idSemilla el ID de la semilla que se va a plantar.
      */
     public void plantarSemillaColumna(int columna, int idSemilla) {
+
         String filasStr = p.getProperty("filashuerto");
         String columnasStr = p.getProperty("columnas");
         try {
             int filas = Integer.parseInt(filasStr);
             int columnas = Integer.parseInt(columnasStr);
-            // RandomAccessFile raf = new RandomAccessFile(RUTA_HUERTO, "rw");
-            abrirConexion();
             for (int i = 0; i < filas; i++) {
                 long posicion = (i * columnas + columna) * LONGITUD;
 
@@ -308,6 +310,7 @@ public class HuertoGestion implements Serializable {
             System.out.println("Error al plantar semilla en la columna: " + e.getMessage());
             e.printStackTrace();
         }
+
     }
 
     /**

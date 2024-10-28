@@ -85,6 +85,7 @@ public class Main {
 
             }
         } while (opc != 6);
+
     }
 
     /**
@@ -104,6 +105,7 @@ public class Main {
         System.out.println("¿Quieres personalizar la partida?");
         resp = entrada.nextLine();
         personalizado = resp.equalsIgnoreCase("si");
+
         if (personalizado) {
             System.out.println("Vamos a personalizar los datos");
             //metodo gestion crearfichero personalizado
@@ -117,6 +119,7 @@ public class Main {
         granja = new Granja();
         granja.inicializarValores(personalizado);
         menuJuego(granja);
+        granja.getH().cerrarConexion();
     }
 
     /**
@@ -145,13 +148,16 @@ public class Main {
      * Carga una partida previamente guardada y muestra el menú del juego.
      */
     public static void cargarPartida() {
+        Granja granja=null;
         //cargo el binario si existe y muestro el menu
         if (GESTION_BINARIO.existeFichero()) {
-            Granja granja = GESTION_BINARIO.cargarBinarioPartida();
+            granja = GESTION_BINARIO.cargarBinarioPartida();
             menuJuego(granja);
         } else {
             System.out.println("No existe partida guardada");
         }
+        granja.getH().cerrarConexion();
+
     }
 
     public static void main(String[] args) {

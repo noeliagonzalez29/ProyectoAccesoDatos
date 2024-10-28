@@ -43,7 +43,9 @@ public class Granja implements Serializable {
         this.propiedades = GestionProperties.getInstancia();
         this.diaActual = 0;
         this.diasEnEstacionActual = 1;
+        h.abrirConexion();
         inicializarValores(false);
+        //registro.escribir("Nueva partida iniciada en la estación " + estacion + ".");
 
     }
 
@@ -75,6 +77,7 @@ public class Granja implements Serializable {
         t.agregarSemillasPorEstacion(estacion.toString(), semillasDisponibles);
         t.generarSemillasDelDia(estacion.toString());
         h.inicializarHuerto();
+
     }
 
     /**
@@ -102,16 +105,16 @@ public class Granja implements Serializable {
      * y generando nuevas semillas para la tienda.
      */
     public void iniciarNuevoDia() {
+
         if (diaActual == 0) {
             estacion = Estacion.valueOf(propiedades.getProperty("estacioninicio"));
         }
-        //estacion = Clases.Estacion.valueOf(propiedades.getProperty("estacioninicio"));
+
         Estacion estacionAnterior = estacion;
 
-        // 1. Actualizar el contador de días
         diaActual++;
         diasEnEstacionActual++;
-        // 2. Verificar si es necesario cambiar de estación
+
         int duracionEstacion = Integer.parseInt(propiedades.getProperty("duracionestacion"));
         if (diasEnEstacionActual > (duracionEstacion + 1)) {
             diaActual = 1;
@@ -123,10 +126,10 @@ public class Granja implements Serializable {
             h.actualizarHuertoNuevoDia();
         }
 
-        // 4. Generar nuevas semillas para la tienda
         t.generarSemillasDelDia(String.valueOf(estacion));
-        // Opcional: Mostrar información del nuevo día o estación
+
         System.out.println("Día " + diaActual + " en la estación " + estacion);
+
     }
 
     /**
@@ -162,6 +165,7 @@ public class Granja implements Serializable {
                         ", Nombre: " + semilla.getNombre() +
                         ", Costo total para la columna: " + costoTotal +
                         ", Días de crecimiento: " + semilla.getDiasCrecimiento());
+
             }
         }
         if (semillasComprables.isEmpty()) {
@@ -195,7 +199,6 @@ public class Granja implements Serializable {
                             " en toda la columna " + columna +
                             ". Costo total: " + costoTotal +
                             ". Presupuesto restante: " + presupuesto);
-
                     correcto = true;
                     exito = true;
                 } else {
@@ -222,7 +225,6 @@ public class Granja implements Serializable {
         gananciasAcumuladas += gananciasVenta;
         System.out.println("Tras la venta tengo: " + presupuesto + " € gracias a las ventas");
         h.mostrarHuerto();
-
     }
 
     /**
@@ -246,6 +248,9 @@ public class Granja implements Serializable {
         System.out.println("Presupuesto: " + presupuesto + " € ");
         h.mostrarHuerto();
         a.mostrarAlmacen();
+
+
+
     }
 
 

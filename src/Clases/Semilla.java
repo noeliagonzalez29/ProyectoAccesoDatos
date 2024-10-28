@@ -115,6 +115,7 @@ public class Semilla implements Serializable {
 
                     Semilla s = new Semilla(id, nombre, estaciones, diaCrecimiento, precioCompraSemilla, precioVentaFruto, maxFrutos);
                     lSemilla.add(s);
+
                 }
             }
 
@@ -137,6 +138,7 @@ public class Semilla implements Serializable {
         for (Semilla semilla : lSemilla) {
             if (id == semilla.getId()) {
                 return semilla;
+
             }
         }
         return null;
