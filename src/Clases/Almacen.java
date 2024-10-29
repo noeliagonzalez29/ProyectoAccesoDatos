@@ -89,9 +89,10 @@ public class Almacen implements Serializable {
                 ventasAcumuladas.put(semilla, yaVendido + cantVender);
 
                 System.out.println("Se han vendido " + cantVender + " de " + semilla.getNombre() + " por " + ganancias + " euros.");
-                frutos.remove(semilla);
             }
         }
+
+        frutos.clear();
         return gananciasTotal;
     }
 

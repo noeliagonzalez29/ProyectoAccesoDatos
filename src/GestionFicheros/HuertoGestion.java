@@ -112,7 +112,7 @@ public class HuertoGestion implements Serializable {
         Map<Semilla, Integer> cosecha = new HashMap<>();
         String filasStr = p.getProperty("filashuerto");
         String columnasStr = p.getProperty("columnas");
-
+        abrirConexion();
         try {
             int filas = Integer.parseInt(filasStr);
             int columnas = Integer.parseInt(columnasStr);
@@ -140,7 +140,7 @@ public class HuertoGestion implements Serializable {
 
                             if (diasPlantado >= semillaActual.getDiasCrecimiento()) {
                                 // La semilla está lista para cosechar
-                                int maxFrutos = semillaActual.getMaxFrutos();
+                                int maxFrutos = semillaActual.getMaxFrutos(); //aleatorio entre 1 maxFrutos
                                 System.out.println("La semilla en (" + i + ", " + j +
                                         ") está lista para cosechar. Frutos obtenidos: " + maxFrutos);
 
@@ -216,7 +216,7 @@ public class HuertoGestion implements Serializable {
 
         String filasStr = p.getProperty("filashuerto");
         String columnasStr = p.getProperty("columnas");
-
+        abrirConexion();
         try {
             int filas = Integer.parseInt(filasStr);
             int columnas = Integer.parseInt(columnasStr);
@@ -265,6 +265,7 @@ public class HuertoGestion implements Serializable {
     public boolean isColumnaVacia(int columna) {
         String filasStr = p.getProperty("filashuerto");
         String columnasStr = p.getProperty("columnas");
+        abrirConexion();
         try {
             int filas = Integer.parseInt(filasStr);
             int columnas = Integer.parseInt(columnasStr);
@@ -296,7 +297,7 @@ public class HuertoGestion implements Serializable {
     public boolean isColumnaEnRango(int columna) {
         String columnasStr = p.getProperty("columnas");
         int columnas = Integer.parseInt(columnasStr);
-
+        abrirConexion();
         if (columna < 0 || columna >= columnas) {
             System.out.println("Columna fuera de rango. Debe estar entre 0 y " + (columnas - 1));
             return false;
@@ -315,6 +316,7 @@ public class HuertoGestion implements Serializable {
 
         String filasStr = p.getProperty("filashuerto");
         String columnasStr = p.getProperty("columnas");
+        abrirConexion();
         try {
             int filas = Integer.parseInt(filasStr);
             int columnas = Integer.parseInt(columnasStr);

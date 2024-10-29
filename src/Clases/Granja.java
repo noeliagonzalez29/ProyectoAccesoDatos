@@ -43,7 +43,7 @@ public class Granja implements Serializable {
         this.propiedades = GestionProperties.getInstancia();
         this.diaActual = 0;
         this.diasEnEstacionActual = 1;
-        h.abrirConexion();
+       // h.abrirConexion();
         inicializarValores(false);
 
     }
