@@ -50,6 +50,28 @@ public class HuertoGestion implements Serializable {
     }
 
     /**
+     * Inicializa los componentes del huerto, creando un archivo de datos con un número especificado de filas y columnas.
+     *
+     * @param filas    El número de filas del huerto.
+     * @param columnas El número de columnas del huerto.
+     */
+    public static void iniciarComponentes(int filas, int columnas) {
+        try {
+            RandomAccessFile raf = new RandomAccessFile("src/resources/huerto.dat", "rw");
+            for (int i = 0; i < filas; i++) {
+                for (int j = 0; j < columnas; j++) {
+                    raf.writeInt(-1);
+                    raf.writeBoolean(false);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Archivo no encontrado");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Inicializa el huerto creando las celdas en el archivo.
      * Lee el número de filas y columnas desde las propiedades y
      * establece cada celda con valores predeterminados.

@@ -45,7 +45,6 @@ public class Granja implements Serializable {
         this.diasEnEstacionActual = 1;
         h.abrirConexion();
         inicializarValores(false);
-        //registro.escribir("Nueva partida iniciada en la estación " + estacion + ".");
 
     }
 

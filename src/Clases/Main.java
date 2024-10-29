@@ -105,17 +105,16 @@ public class Main {
         System.out.println("¿Quieres personalizar la partida?");
         resp = entrada.nextLine();
         personalizado = resp.equalsIgnoreCase("si");
-
+        HuertoGestion h = new HuertoGestion();
         if (personalizado) {
             System.out.println("Vamos a personalizar los datos");
             //metodo gestion crearfichero personalizado
             valores = p.crearFicheroPropiedadesPersonalizado();
-            HuertoGestion h = new HuertoGestion();
             h.crearFicheroHuerto();
         } else {
             valores = p.cargarPorDefecto();
         }
-        iniciarComponentes(Integer.parseInt(valores[0]), Integer.parseInt(valores[1]));
+        h.iniciarComponentes(Integer.parseInt(valores[0]), Integer.parseInt(valores[1]));
         granja = new Granja();
         granja.inicializarValores(personalizado);
         menuJuego(granja);
@@ -123,32 +122,10 @@ public class Main {
     }
 
     /**
-     * Inicializa los componentes del huerto, creando un archivo de datos con un número especificado de filas y columnas.
-     *
-     * @param filas    El número de filas del huerto.
-     * @param columnas El número de columnas del huerto.
-     */
-    public static void iniciarComponentes(int filas, int columnas) {
-        try {
-            RandomAccessFile raf = new RandomAccessFile("src/resources/huerto.dat", "rw");
-            for (int i = 0; i < filas; i++) {
-                for (int j = 0; j < columnas; j++) {
-                    raf.writeInt(-1);
-                    raf.writeBoolean(false);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Archivo no encontrado");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
      * Carga una partida previamente guardada y muestra el menú del juego.
      */
     public static void cargarPartida() {
-        Granja granja=null;
+        Granja granja = null;
         //cargo el binario si existe y muestro el menu
         if (GESTION_BINARIO.existeFichero()) {
             granja = GESTION_BINARIO.cargarBinarioPartida();
