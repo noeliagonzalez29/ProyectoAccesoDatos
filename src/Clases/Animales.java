@@ -111,4 +111,6 @@ public abstract class Animales implements Serializable {
 
     public void setProducto(Productos producto) {
     }
+
+    //metodo abstracto producir
 }

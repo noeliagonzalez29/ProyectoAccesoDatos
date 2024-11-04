@@ -4,10 +4,8 @@ import Clases.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -64,16 +62,16 @@ public class BasesDatos {
                 Alimentos alimento = null;
                 String nombreAlimento = rs.getString("nombre_alimento");
                 if(nombreAlimento !=null){
-                    BigDecimal precioAlimento = rs.getBigDecimal("precio_alimento");
+                    double precioAlimento = rs.getDouble("precio_alimento");
                     int cantidadDisponible = rs.getInt("cantidad_disponible");
-                    alimento = new Alimentos(nombreAlimento, precioAlimento, cantidadDisponible);
+                    alimento = new Alimentos(id_alimento, nombreAlimento, precioAlimento, cantidadDisponible);
                 }
 
                 Productos producto = null;
                 String nombreProducto = rs.getString("nombre_producto");
                 if(nombreProducto!=null){
                     double precioProducto = rs.getDouble("precio_producto");
-                    producto = new Productos(nombreProducto, precioProducto);
+                    producto = new Productos(id_producto,nombreProducto, precioProducto);
                 }
 
                 Animales a;
@@ -118,16 +116,18 @@ public class BasesDatos {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()){
                 //ALIMENTOS
+                int id = rs.getInt("id");
                 String nombreA = rs.getString("nombre");
-                BigDecimal precio = rs.getBigDecimal("precio");
+                double precio = rs.getDouble("precio");
                 int cantidad = rs.getInt("cantidad_disponible");
-                alimentos= new Alimentos(nombreA, precio, cantidad);
+                alimentos= new Alimentos(id,nombreA, precio, cantidad);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return alimentos;
     }
+    /*
     public Productos cargarProductos(){
         Productos productos  = null;
         try {
@@ -138,13 +138,15 @@ public class BasesDatos {
                 String nombreP = rs.getString("nombre");
                 double preciop = rs.getDouble("precio");
                 int cantidadP = rs.getInt("cantidad_disponible");
-                productos= new Productos(nombreP, preciop);
+                productos= new Productos(id_ producto, nombreP, preciop);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return productos;
     }
+     */
+
     public void alimentos(){
         try {
             PreparedStatement stmt = connection.prepareStatement( " SELECT * FROM alimentos" );
@@ -260,6 +262,28 @@ public class BasesDatos {
             throw new RuntimeException(e);
         }
 
+    }
+
+
+    //leer la cantidad de alimento
+    public int leerCantidadAlimento(int id){
+        int cantidad_disponible=0;
+
+        try {
+            String query = "SELECT  cantidad_disponible FROM alimentos WHERE id = ? ";
+            PreparedStatement stmt = connection.prepareStatement( query );
+            stmt.setInt(1, id );
+            ResultSet rs= stmt.executeQuery();
+
+            while (rs.next()){
+            cantidad_disponible=    rs.getInt( "cantidad_disponible");
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return cantidad_disponible;
     }
 }
 

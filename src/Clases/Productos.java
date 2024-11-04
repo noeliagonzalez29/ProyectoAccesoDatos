@@ -20,11 +20,11 @@ public class Productos {
     public Productos() {
     }
 
-    public Productos( String nombre, double precio) {
-
+    public Productos(int id, String nombre, double precio) {
+        this.id= id;
         this.nombre = nombre;
         this.precio = precio;
-        this.cantidadProducida =cantidadProducida;
+
     }
     public Productos(String nombre){
         this.nombre=nombre;

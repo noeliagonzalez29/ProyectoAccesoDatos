@@ -62,19 +62,19 @@ public class Establo implements Serializable {
     public void alimentar() {
         for (Animales animal : lAnimales) {
             if (!animal.isEstaAlimentado()) { // Verifica si el animal ya ha sido alimentado en el día
-                int cantidadConsumida = animal.calcularCantidadConsumida(); // Llama al método
-                int cantidadDisponible = animal.getA().getCantidad();
+                int cantidadConsumida =  animal.calcularCantidadConsumida(); // Llama al método
+                int cantidadDisponible = basesDatos.leerCantidadAlimento(animal.getA().getId()); // sacar de bbdd
                 System.out.println(animal.getNombre() + "con una cantidad de: " + cantidadDisponible + animal.isEstaAlimentado());
                 if (cantidadDisponible >= cantidadConsumida) {
                     int nuevaCantidad = cantidadDisponible - cantidadConsumida;
                     basesDatos.actualizarAlimentos(animal.getA().getId(), nuevaCantidad);
                     //modificar la cantidad
-                    animal.getA().setCantidad(nuevaCantidad);
+                    //animal.getA().setCantidad(nuevaCantidad);
                     //animal.actualizarCantidadAlimento(nuevaCantidad);
                     animal.setEstaAlimentado(true); // Marca al animal como alimentado
                     System.out.println("Animal " + animal.getNombre() + " alimentado. Nueva cantidad disponible: " + nuevaCantidad);
 
-                    basesDatos.inssertarTablaConsumo(animal.getId(), cantidadConsumida, fechaActual);
+                    basesDatos.inssertarTablaConsumo(animal.getId(), nuevaCantidad, fechaActual);
 
                 } else {
                     System.out.println("No hay suficiente alimento para " + animal.getNombre());

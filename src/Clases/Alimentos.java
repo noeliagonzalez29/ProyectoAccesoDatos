@@ -7,15 +7,15 @@ import java.math.BigDecimal;
 public class Alimentos {
     private int id;
     private String nombre;
-    private BigDecimal precio;
+    private double precio;
     private int cantidad_disponible;
 
     public Alimentos() {
 
     }
 
-    public Alimentos( String nombre, BigDecimal precio, int cantidad_disponible) {
-
+    public Alimentos( int id,String nombre,double precio, int cantidad_disponible) {
+        this.id= id;
         this.nombre = nombre;
         this.precio = precio;
         this.cantidad_disponible = cantidad_disponible;
@@ -44,11 +44,11 @@ public class Alimentos {
         this.nombre = nombre;
     }
 
-    public BigDecimal getPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(BigDecimal precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
 
