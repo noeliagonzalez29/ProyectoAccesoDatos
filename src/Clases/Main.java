@@ -25,16 +25,14 @@ public class Main {
     public static void menuJuego(Granja granja) {
         Scanner entrada = new Scanner(System.in);
         GestionProperties.getInstancia();
-        int columna;
         int opc = 0;
         do {
             System.out.println("------------STARDAM VALLEY------------");
             System.out.println("1. Iniciar Nuevo Día");
-            System.out.println("2. Atender Cultivo");
-            System.out.println("3. Plantar cultivo en columna");
-            System.out.println("4. Vender cosecha");
-            System.out.println("5. Mostrar información granja");
-            System.out.println("6. Salir");
+            System.out.println("2. Huerto ");
+            System.out.println("3. Establos");
+            System.out.println("4. Salir");
+
             try {
                 opc = entrada.nextInt();
 
@@ -43,49 +41,116 @@ public class Main {
                         granja.iniciarNuevoDia();
                         break;
                     case 2:
-                        granja.cuidarHuerto();
+                        menuHuerto(granja);
                         break;
                     case 3:
-                        boolean columValida = false;
-                        do {
-                            try {
-                                System.out.println("¿En qué columna quiere plantar?");
-                                columna = entrada.nextInt();
-
-                                if (granja.getH().isColumnaEnRango(columna)) {
-                                    if (granja.getH().isColumnaVacia(columna)) {
-                                        granja.plantarCultivoColumna(columna);
-                                        columValida = true;
-                                    } else {
-                                        System.out.println("NO puedes plantar aquí, columna OCUPADA");
-                                    }
-                                }
-                            } catch (InputMismatchException e) {
-                                System.out.println("Debe introducir un número válido para la columna");
-                                entrada.nextLine();
-                            }
-                        } while (!columValida);
+                        menuEstablo(granja);
                         break;
                     case 4:
-                        granja.venderFrutosGranja();
-                        break;
-                    case 5:
-                        granja.mostrarGranja();
-                        break;
-                    case 6:
                         System.out.println("ABANDONANDO EL JUEGO...");
                         GESTION_BINARIO.guardarPartida(granja);
                         break;
+
                     default:
-                        System.out.println("Opcion NO valida. Introduce de 1 a 6");
+                        throw new IllegalStateException("Unexpected value: " + opc);
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Debe introducir un número del 1 al 6");
                 entrada.nextLine(); //hay que limpiar porque si no no deja de repetirse
 
             }
-        } while (opc != 6);
+        } while (opc != 4);
 
+    }
+    public static void menuHuerto(Granja granja){
+        Scanner entrada = new Scanner(System.in);
+        int opc = 0;
+        int columna;
+        do{
+
+            System.out.println("1. Atender Cultivo");
+            System.out.println("2. Plantar cultivo en columna");
+            System.out.println("3. Vender cosecha");
+            System.out.println("4. Mostrar información granja");
+            System.out.println("5. Volver");
+            opc= entrada.nextInt();
+            switch (opc){
+                case 1:
+                    granja.cuidarHuerto();
+                    break;
+                case 2:
+                    boolean columValida = false;
+                    do {
+                        try {
+                            System.out.println("¿En qué columna quiere plantar?");
+                            columna = entrada.nextInt();
+
+                            if (granja.getH().isColumnaEnRango(columna)) {
+                                if (granja.getH().isColumnaVacia(columna)) {
+                                    granja.plantarCultivoColumna(columna);
+                                    columValida = true;
+                                } else {
+                                    System.out.println("NO puedes plantar aquí, columna OCUPADA");
+                                }
+                            }
+                        } catch (InputMismatchException e) {
+                            System.out.println("Debe introducir un número válido para la columna");
+                            entrada.nextLine();
+                        }
+                    } while (!columValida);
+                    break;
+                case 3:
+                    granja.venderFrutosGranja();
+                    break;
+                case 4:
+                    granja.mostrarGranja();
+                    break;
+                case 5:
+                    System.out.println("Volviendo...");
+                    break;
+                default:
+                    System.out.println("Opcion NO valida. Introduce de 1 a 5");
+            }
+
+        }while(opc!=5);
+    }
+    public static void menuEstablo(Granja granja){
+        Scanner entrada = new Scanner(System.in);
+        int opc = 0;
+        do{
+            System.out.println("---------ESTABLOS------");
+            System.out.println("1. Producir");
+            System.out.println("2. Alimentar");
+            System.out.println("3. Vender productos");
+            System.out.println("4. Rellenar comedero");
+            System.out.println("5. Mostrar Animales");
+            System.out.println("6. Volver");
+            opc= entrada.nextInt();
+            switch (opc){
+                case 1:
+                    granja.produccionAnimales();
+                    break;
+                case 2:
+                   granja.alimentarAnimales();
+                    break;
+                case 3:
+                    granja.venderProductos();
+
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    //mostrar animales instancia de establo en granja para mostrarlo
+                    granja.mostrarEstablo();
+                    break;
+                case 6:
+                    System.out.println("Volviendo...");
+                    break;
+                default:
+                    System.out.println("Opcion NO valida. Introduce de 1 a 6");
+            }
+
+        }while(opc!=6);
     }
 
     /**

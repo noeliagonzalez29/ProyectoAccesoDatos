@@ -1,5 +1,5 @@
 package Clases;
 
 public enum Anim {
-    GALLINAS, OVEJAS, VACAS, CERDOS
+    GALLINA, OVEJA, VACA, CERDO
 }

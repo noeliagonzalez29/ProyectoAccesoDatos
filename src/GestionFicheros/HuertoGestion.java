@@ -5,6 +5,7 @@ import Clases.Semilla;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * La clase {@code GestionFicheros.HuertoGestion} se encarga de gestionar un huerto,
@@ -139,8 +140,10 @@ public class HuertoGestion implements Serializable {
                             raf.writeBoolean(true); // Se marca como no regada para el siguiente ciclo
 
                             if (diasPlantado >= semillaActual.getDiasCrecimiento()) {
-                                // La semilla está lista para cosechar
-                                int maxFrutos = semillaActual.getMaxFrutos(); //aleatorio entre 1 maxFrutos
+                                // La semilla está lista para cosechar.Aleatorio entre 1 maxFrutos
+                                Random random = new Random();
+                                int maxFrutos = random.nextInt(semillaActual.getMaxFrutos())+1;
+
                                 System.out.println("La semilla en (" + i + ", " + j +
                                         ") está lista para cosechar. Frutos obtenidos: " + maxFrutos);
 

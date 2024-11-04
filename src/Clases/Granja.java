@@ -23,6 +23,7 @@ public class Granja implements Serializable {
     private List<Semilla> semillasDisponibles;
     private GestionProperties propiedades;
     private int diasEnEstacionActual;
+    private Establo establo;
 
 
     public HuertoGestion getH() {
@@ -43,6 +44,7 @@ public class Granja implements Serializable {
         this.propiedades = GestionProperties.getInstancia();
         this.diaActual = 0;
         this.diasEnEstacionActual = 1;
+        this.establo= new Establo();
        // h.abrirConexion();
         inicializarValores(false);
 
@@ -113,7 +115,10 @@ public class Granja implements Serializable {
 
         diaActual++;
         diasEnEstacionActual++;
+        //reiniciar alimento establo
+        establo.reiniciarAlimentacion();
 
+        //establo.resetearAlimentado(); //para cambiar si ha sido alimentado
         int duracionEstacion = Integer.parseInt(propiedades.getProperty("duracionestacion"));
         if (diasEnEstacionActual > (duracionEstacion + 1)) {
             diaActual = 1;
@@ -248,9 +253,28 @@ public class Granja implements Serializable {
         h.mostrarHuerto();
         a.mostrarAlmacen();
 
-
-
     }
 
+    public void mostrarEstablo(){
+        establo.mostrarAnimales();
+        establo.mostrarAlimentos();
+        establo.mostrarProductos();
+    }
+
+    public  void alimentarAnimales(){
+        int duracionEstacion = Integer.parseInt(propiedades.getProperty("duracionestacion"));
+
+        if (diaActual < duracionEstacion) {
+            establo.alimentar();
+        }
+
+    }
+    public void produccionAnimales(){
+        establo.produccion();
+    }
+
+    public void venderProductos(){
+        establo.venderProductos();
+    }
 
 }

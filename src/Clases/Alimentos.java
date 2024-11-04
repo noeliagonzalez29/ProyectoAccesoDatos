@@ -1,28 +1,40 @@
 package Clases;
 
+import GestionBasesDatos.BasesDatos;
+
+import java.math.BigDecimal;
+
 public class Alimentos {
-    int id;
-    String nombre;
-    int precio;
-    int cantidad;
+    private int id;
+    private String nombre;
+    private BigDecimal precio;
+    private int cantidad_disponible;
 
     public Alimentos() {
+
     }
 
-    public Alimentos(int id, String nombre, int precio, int cantidad) {
-        this.id = id;
+    public Alimentos( String nombre, BigDecimal precio, int cantidad_disponible) {
+
         this.nombre = nombre;
         this.precio = precio;
-        this.cantidad = cantidad;
+        this.cantidad_disponible = cantidad_disponible;
+    }
+    public Alimentos(String nombre){
+        this.nombre= nombre;
+
     }
 
-    public int getId() {
+
+ public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
     }
+
+
 
     public String getNombre() {
         return nombre;
@@ -32,19 +44,19 @@ public class Alimentos {
         this.nombre = nombre;
     }
 
-    public int getPrecio() {
+    public BigDecimal getPrecio() {
         return precio;
     }
 
-    public void setPrecio(int precio) {
+    public void setPrecio(BigDecimal precio) {
         this.precio = precio;
     }
 
     public int getCantidad() {
-        return cantidad;
+        return cantidad_disponible;
     }
 
     public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
+        this.cantidad_disponible = cantidad_disponible;
     }
 }

@@ -9,8 +9,10 @@ public class Ovejas extends Animales implements Serializable {
     public Ovejas() {
     }
 
-    public Ovejas(int id, Anim tipoAnimal, String nombre, int dia_insercion, Productos p, Alimentos a, Date fechaEsquilado) {
-        super(id, tipoAnimal, nombre, dia_insercion, p, a);
+
+
+    public Ovejas(int id, Anim tipoAnimal, String nombre) {
+        super(id, tipoAnimal, nombre,0);
         this.fechaEsquilado = fechaEsquilado;
     }
 
@@ -21,4 +23,29 @@ public class Ovejas extends Animales implements Serializable {
     public void setFechaEsquilado(Date fechaEsquilado) {
         this.fechaEsquilado = fechaEsquilado;
     }
+    @Override
+    public int producir() {
+        if (!isEstaAlimentado()) {
+            return 0;
+        }
+
+        // Verificar si han pasado 2 días desde el último esquilado
+        Date fechaActual = new Date(System.currentTimeMillis());
+        if (fechaEsquilado != null) {
+            long diferenciaDias = (fechaActual.getTime() - fechaEsquilado.getTime()) / (24 * 60 * 60 * 1000);
+            if (diferenciaDias < 2) {
+                return 0;
+            }
+        }
+
+        // Producir lana
+        int cantidadProducida = 5;
+        setEstaAlimentado(false);
+        setFechaEsquilado(fechaActual);
+        getP().setCantidad(getP().getCantidad() + cantidadProducida);
+
+        return cantidadProducida;
+    }
+
+
 }

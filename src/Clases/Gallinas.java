@@ -8,9 +8,33 @@ public class Gallinas extends Animales implements Serializable {
     public Gallinas() {
     }
 
-    public Gallinas(int id, Anim tipoAnimal, String nombre, int dia_insercion, Productos p, Alimentos a, int numDias) {
-        super(id, tipoAnimal, nombre, dia_insercion, p, a);
+
+
+    public Gallinas(int id, Anim tipoAnimal, String nombre) {
+        super(id, tipoAnimal, nombre,0);
         this.numDias = numDias;
+    }
+
+    @Override
+    public int producir() {
+        if (!isEstaAlimentado()) {
+            return 0;
+        }
+
+        int cantidadProducida = 0;
+        if (numDias > 40) {
+            cantidadProducida = 1;
+        } else if (numDias > 3) {
+            cantidadProducida = 2;
+        }
+
+        if (cantidadProducida > 0) {
+            setEstaAlimentado(false); // Necesita volver a ser alimentada
+            // Actualizar la cantidad de huevos en el producto
+            getP().setCantidad(getP().getCantidad() + cantidadProducida);
+        }
+
+        return cantidadProducida;
     }
 
     public int getNumDias() {
