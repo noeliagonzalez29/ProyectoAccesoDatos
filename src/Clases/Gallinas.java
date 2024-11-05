@@ -16,7 +16,7 @@ public class Gallinas extends Animales implements Serializable {
     }
 
     @Override
-    public int producir() {
+    public int producir(Estacion estacion) {
         if (!isEstaAlimentado()) {
             return 0;
         }

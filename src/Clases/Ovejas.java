@@ -24,7 +24,7 @@ public class Ovejas extends Animales implements Serializable {
         this.fechaEsquilado = fechaEsquilado;
     }
     @Override
-    public int producir() {
+    public int producir(Estacion estacion) {
         if (!isEstaAlimentado()) {
             return 0;
         }

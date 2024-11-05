@@ -85,7 +85,7 @@ public abstract class Animales implements Serializable {
     }
 
 
-    public abstract int producir();
+    public abstract int producir(Estacion estacion);
     public int calcularCantidadConsumida() {
         switch (tipoAnimal) {
             case VACA:

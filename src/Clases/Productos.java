@@ -7,6 +7,7 @@ public class Productos {
     private String nombre;
     private double precio;
     private int cantidadProducida;
+    private int cantidad;
 
     public Tipo_elemento getTipo_elemento() {
         return tipo_elemento;
@@ -20,10 +21,11 @@ public class Productos {
     public Productos() {
     }
 
-    public Productos(int id, String nombre, double precio) {
+    public Productos(int id, String nombre, double precio, int cantidad) {
         this.id= id;
         this.nombre = nombre;
         this.precio = precio;
+        this.cantidad= cantidad;
 
     }
     public Productos(String nombre){

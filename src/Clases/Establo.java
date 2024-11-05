@@ -10,8 +10,9 @@ import java.util.List;
 public class Establo implements Serializable {
     //lista donde guardar los animales y metodos
     private List<Animales> lAnimales;
-    private BasesDatos basesDatos;
+    private BasesDatos basesDatos; //usar el metodo getInstancia de base de datos
     Timestamp fechaActual = new Timestamp(System.currentTimeMillis());
+    private Estacion estacion;
 
     public Establo() {
         this.lAnimales = new ArrayList<>();
@@ -64,7 +65,7 @@ public class Establo implements Serializable {
             if (!animal.isEstaAlimentado()) { // Verifica si el animal ya ha sido alimentado en el día
                 int cantidadConsumida =  animal.calcularCantidadConsumida(); // Llama al método
                 int cantidadDisponible = basesDatos.leerCantidadAlimento(animal.getA().getId()); // sacar de bbdd
-                System.out.println(animal.getNombre() + "con una cantidad de: " + cantidadDisponible + animal.isEstaAlimentado());
+                System.out.println(animal.getNombre() + "con una cantidad de: " + animal.getA().getCantidad()+ animal.isEstaAlimentado());
                 if (cantidadDisponible >= cantidadConsumida) {
                     int nuevaCantidad = cantidadDisponible - cantidadConsumida;
                     basesDatos.actualizarAlimentos(animal.getA().getId(), nuevaCantidad);
@@ -91,7 +92,7 @@ public class Establo implements Serializable {
     public void produccion() {
         System.out.println("Comienzo de produccion.....");
         for (Animales animal : lAnimales) {
-            int produccion = animal.producir();
+            int produccion = animal.producir( estacion);
 
             if (produccion > 0) {
                 System.out.println(animal.getNombre() + " ha producido " + produccion + " unidades de " +
@@ -112,8 +113,9 @@ public class Establo implements Serializable {
         System.out.println("Iniciando venta de productos...");
         double ingresoTotal = 0;
 
-        // Recorremos los animales y accedemos a sus productos
+        // Recorremos los productos que sacamos de mi metodo en bases de datos que me retorna esa lista de productos y me la recorro. NO los animales
         for (Animales animal : lAnimales) {
+          //  List<Productos>lproductos= basesDatos.c
             Productos producto = animal.getP();  // Usando el getter que ya tienes
 
             if (producto != null && producto.getCantidad() > 0) {
@@ -128,7 +130,7 @@ public class Establo implements Serializable {
                 Timestamp fechaVenta = new Timestamp(System.currentTimeMillis());
                 basesDatos.registrarTablaTransacciones(
                         Tipo_transaccion.VENTA,
-                        producto.getTipo_elemento(),
+                        Tipo_elemento.PRODUCTO,
                         precio,
                         fechaVenta
                 );

@@ -127,25 +127,27 @@ public class BasesDatos {
         }
         return alimentos;
     }
-    /*
-    public Productos cargarProductos(){
-        Productos productos  = null;
+
+    public List<Productos> cargarProductos(){
+       List<Productos>lProductos= new ArrayList<>(); //cambiar a lista
         try {
             PreparedStatement stmt = connection.prepareStatement(" SELECT * FROM alimentos");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()){
                 //ALIMENTOS
+                int id= rs.getInt("id");
                 String nombreP = rs.getString("nombre");
                 double preciop = rs.getDouble("precio");
                 int cantidadP = rs.getInt("cantidad_disponible");
-                productos= new Productos(id_ producto, nombreP, preciop);
+             Productos  productos= new Productos(id_ producto, nombreP, preciop);
+             lProductos.add(productos);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return productos;
+        return lProductos;
     }
-     */
+
 
     public void alimentos(){
         try {
@@ -222,7 +224,7 @@ public class BasesDatos {
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, cantidad_disponible );
             stmt.setInt(2, id);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -237,7 +239,7 @@ public class BasesDatos {
             stmt.setInt(1, id_animal);
             stmt.setInt(2, cantidad);
             stmt.setTimestamp(3, fecha_produccion);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -285,5 +287,7 @@ public class BasesDatos {
         }
         return cantidad_disponible;
     }
+
+
 }
 

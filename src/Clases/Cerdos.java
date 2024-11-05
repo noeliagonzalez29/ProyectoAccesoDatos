@@ -19,11 +19,8 @@ public class Cerdos extends Animales implements Serializable {
         return estacion;
     }
 
-    public void setEstacion(Estacion estacion) {
-        this.estacion = estacion;
-    }
     @Override
-    public int producir() {
+    public int producir(Estacion estacion) {
         if (!isEstaAlimentado()) {
             return 0;
         }
