@@ -58,7 +58,7 @@ public class BasesDatos {
                 int peso = rs.getInt("peso");
                 int id_alimento = rs.getInt("id_alimento");
                 int id_producto = rs.getInt("id_producto");
-                //Alimentos alimento = null;
+                int cantidadP = rs.getInt("cantidad_disponible");
                 Alimentos alimento = null;
                 String nombreAlimento = rs.getString("nombre_alimento");
                 if(nombreAlimento !=null){
@@ -71,7 +71,7 @@ public class BasesDatos {
                 String nombreProducto = rs.getString("nombre_producto");
                 if(nombreProducto!=null){
                     double precioProducto = rs.getDouble("precio_producto");
-                    producto = new Productos(id_producto,nombreProducto, precioProducto);
+                    producto = new Productos(id_producto,nombreProducto, precioProducto, cantidadP);
                 }
 
                 Animales a;
@@ -139,7 +139,7 @@ public class BasesDatos {
                 String nombreP = rs.getString("nombre");
                 double preciop = rs.getDouble("precio");
                 int cantidadP = rs.getInt("cantidad_disponible");
-             Productos  productos= new Productos(id_ producto, nombreP, preciop);
+             Productos  productos= new Productos(id, nombreP, preciop, cantidadP);
              lProductos.add(productos);
             }
         } catch (SQLException e) {

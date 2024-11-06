@@ -16,7 +16,7 @@ public class Establo implements Serializable {
 
     public Establo() {
         this.lAnimales = new ArrayList<>();
-        basesDatos = new BasesDatos();
+        basesDatos = BasesDatos.getInstancia();
         cargaAnimales();
 
     }
@@ -112,18 +112,16 @@ public class Establo implements Serializable {
     public void venderProductos() {
         System.out.println("Iniciando venta de productos...");
         double ingresoTotal = 0;
-
+        List<Productos> lProductos= basesDatos.cargarProductos();
         // Recorremos los productos que sacamos de mi metodo en bases de datos que me retorna esa lista de productos y me la recorro. NO los animales
-        for (Animales animal : lAnimales) {
-          //  List<Productos>lproductos= basesDatos.c
-            Productos producto = animal.getP();  // Usando el getter que ya tienes
+        for (Productos p : lProductos) {
 
-            if (producto != null && producto.getCantidad() > 0) {
+            if (p != null && p.getCantidad() > 0) {
                 // Calcular el importe de la venta de este producto
-                double precio = producto.getCantidad() * producto.getPrecio();
+                double precio = p.getCantidad() * p.getPrecio();
 
-                System.out.println("Se han vendido " + producto.getCantidad() +
-                        " unidades de " + producto.getNombre() +
+                System.out.println("Se han vendido " + p.getCantidad() +
+                        " unidades de " + p.getNombre() +
                         " por " + precio + "€");
 
                 // Registrar la transacción
@@ -136,10 +134,10 @@ public class Establo implements Serializable {
                 );
 
                 // Actualizar la cantidad en la base de datos
-                basesDatos.actualizarTablaProductos(producto.getId(), 0);  // Ponemos la cantidad a 0
+                basesDatos.actualizarTablaProductos(p.getId(), 0);  // Ponemos la cantidad a 0
 
                 // Actualizar la cantidad en el objeto
-                producto.setCantidad(0);
+                p.setCantidad(0);
 
                 ingresoTotal +=precio;
             }
