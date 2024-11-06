@@ -10,9 +10,9 @@ import java.util.List;
 public class Establo implements Serializable {
     //lista donde guardar los animales y metodos
     private List<Animales> lAnimales;
+    private static final int CANT_MAX =25;
     private BasesDatos basesDatos; //usar el metodo getInstancia de base de datos
     Timestamp fechaActual = new Timestamp(System.currentTimeMillis());
-    private Estacion estacion;
 
     public Establo() {
         this.lAnimales = new ArrayList<>();
@@ -89,7 +89,7 @@ public class Establo implements Serializable {
         //basesDatos.registrarHistorialConsumo(lAnimales);
     }
 
-    public void produccion() {
+    public void produccion(Estacion estacion) {
         System.out.println("Comienzo de produccion.....");
         for (Animales animal : lAnimales) {
             int produccion = animal.producir( estacion);
@@ -151,7 +151,63 @@ public class Establo implements Serializable {
         }
     }
 
+    public void rellenarComedero(){
 
+        List<Alimentos> lAlimentos= basesDatos.cargarAlimentos();
+        double totalCompra;
+
+        for(Alimentos a: lAlimentos){
+            if (a!=null && a.getCantidad()<= CANT_MAX){
+                int cantidadNecesaria = CANT_MAX - a.getCantidad();
+                totalCompra= a.getCantidad() * a.getPrecio();
+                System.out.println("Rellenar el comedero te ha salido por: " + totalCompra + "€");
+                Timestamp fechaVenta = new Timestamp(System.currentTimeMillis());
+                basesDatos.registrarTablaTransacciones(Tipo_transaccion.VENTA,
+                        Tipo_elemento.PRODUCTO,
+                        totalCompra,
+                        fechaVenta);
+            }
+        }
+    }
 
 }
+/*
+List<Alimentos> lAlimentos = baseDatos.cargarAlimentos();
+        double gastoTotal = 0.0;
+
+        for (Alimentos alimento : lAlimentos) {
+            if (alimento != null) {
+                int cantidadActual = alimento.getCantidad();
+                int cantidadNecesaria = CANT_MAX - cantidadActual;
+
+                if (cantidadNecesaria > 0) {
+                    double costoCompra = cantidadNecesaria * alimento.getPrecio();
+
+                    if (presupuesto >= costoCompra) {
+                        // Si hay suficiente presupuesto, realiza la compra y actualiza los datos.
+                        baseDatos.actualizarAlimento(alimento.getId(), cantidadNecesaria);
+                        gastoTotal += costoCompra;
+                        presupuesto -= costoCompra;
+
+                        System.out.println("Se ha rellenado el comedero de " + alimento.getNombre() +
+                                           " con " + cantidadNecesaria + " unidades. Costo: " + costoCompra + "€");
+                    } else {
+                        // Si no hay suficiente presupuesto, muestra un mensaje de advertencia.
+                        System.out.println("No hay suficiente presupuesto para comprar " + cantidadNecesaria +
+                                           " unidades de " + alimento.getNombre() + ". Costo necesario: " + costoCompra + "€");
+                    }
+                } else {
+                    // Si el comedero ya está lleno, muestra un mensaje.
+                    System.out.println("El comedero de " + alimento.getNombre() + " ya está lleno.");
+                }
+            }
+        }
+
+        if (gastoTotal > 0) {
+            // Registrar la transacción en la base de datos si hubo algún gasto.
+            baseDatos.registrarTransaccion("COMPRA DE ALIMENTO", gastoTotal);
+            System.out.println("Total de la compra de alimento: " + gastoTotal + "€. Presupuesto restante: " + presupuesto + "€");
+        }
+    }
+ */
 

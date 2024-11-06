@@ -270,11 +270,11 @@ public class Granja implements Serializable {
 
     }
     public void produccionAnimales(){
-        establo.produccion();
+        establo.produccion(this.estacion);
     }
 
     public void venderProductos(){
         establo.venderProductos();
     }
-
+    public void rellenarComedero(){establo.rellenarComedero();}
 }

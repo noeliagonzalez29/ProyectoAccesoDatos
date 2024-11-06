@@ -6,8 +6,8 @@ public class Productos {
     private int id;
     private String nombre;
     private double precio;
-    private int cantidadProducida;
     private int cantidad;
+    private Tipo_elemento tipo_elemento;
 
     public Tipo_elemento getTipo_elemento() {
         return tipo_elemento;
@@ -17,7 +17,6 @@ public class Productos {
         this.tipo_elemento = tipo_elemento;
     }
 
-    private Tipo_elemento tipo_elemento;
     public Productos() {
     }
 
@@ -40,13 +39,7 @@ public class Productos {
         this.id = id;
     }
 
-    public int getCantidadProducida() {
-        return cantidadProducida;
-    }
 
-    public void setCantidadProducida(int cantidadProducida) {
-        this.cantidadProducida = cantidadProducida;
-    }
 
     public String getNombre() {
         return nombre;
@@ -65,10 +58,10 @@ public class Productos {
     }
 
     public int getCantidad() {
-        return cantidadProducida;
+        return cantidad;
     }
 
     public void setCantidad(int cantidad) {
-        this.cantidadProducida = cantidad;
+        this.cantidad = cantidad;
     }
 }

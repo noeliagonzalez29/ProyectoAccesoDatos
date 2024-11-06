@@ -109,7 +109,8 @@ public class BasesDatos {
         }
         return lAnimales;
     }
-    public Alimentos cargarAlimentos(){
+    public List<Alimentos> cargarAlimentos(){
+        List <Alimentos> lAlimentos= new ArrayList<>();
         Alimentos alimentos = null;
         try {
             PreparedStatement stmt = connection.prepareStatement(" SELECT * FROM alimentos");
@@ -121,17 +122,19 @@ public class BasesDatos {
                 double precio = rs.getDouble("precio");
                 int cantidad = rs.getInt("cantidad_disponible");
                 alimentos= new Alimentos(id,nombreA, precio, cantidad);
+
+                lAlimentos.add(alimentos);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return alimentos;
+        return lAlimentos;
     }
 
     public List<Productos> cargarProductos(){
        List<Productos>lProductos= new ArrayList<>(); //cambiar a lista
         try {
-            PreparedStatement stmt = connection.prepareStatement(" SELECT * FROM alimentos");
+            PreparedStatement stmt = connection.prepareStatement(" SELECT * FROM productos");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()){
                 //ALIMENTOS
@@ -220,7 +223,7 @@ public class BasesDatos {
     public void actualizarTablaProductos(int id, int cantidad_disponible){
 
         try {
-            String query = "UPDATE productos SET cantidad_disponible= ? WHERE id = ? ";
+            String query = "UPDATE productos SET  cantidad_disponible = cantidad_disponible + ? WHERE id = ? ";
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, cantidad_disponible );
             stmt.setInt(2, id);
@@ -286,6 +289,18 @@ public class BasesDatos {
             throw new RuntimeException(e);
         }
         return cantidad_disponible;
+    }
+
+    public void actualizarAlimento(int id, int cantidad_disponible){
+        try {
+            String query = "UPDATE productos SET  cantidad_disponible = cantidad_disponible + ? WHERE id = ? ";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, cantidad_disponible );
+            stmt.setInt(2, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
