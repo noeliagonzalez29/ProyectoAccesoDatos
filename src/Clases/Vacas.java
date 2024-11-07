@@ -25,7 +25,7 @@ public class Vacas extends Animales implements Serializable {
         this.peso = peso;
     }
     @Override
-    public int producir(Estacion estacion) {
+    public int producir(Estacion estacion,int diaJuego) {
         if (!isEstaAlimentado()) {
             return 0;
         }

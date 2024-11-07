@@ -8,7 +8,7 @@ public abstract class Animales implements Serializable {
     private int id;
     private Anim tipoAnimal;
     private String nombre;
-    private int dia_insercion;
+    protected int dia_insercion;
     private boolean estaAlimentado;
     private Alimentos alimento;
     private Productos producto;
@@ -85,7 +85,7 @@ public abstract class Animales implements Serializable {
     }
 
     //metodo abstracto producir
-    public abstract int producir(Estacion estacion);
+    public abstract int producir(Estacion estacion, int diaJuego);
     public int calcularCantidadConsumida() {
         switch (tipoAnimal) {
             case VACA:

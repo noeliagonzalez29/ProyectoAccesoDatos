@@ -279,7 +279,7 @@ public class Granja implements Serializable {
      * Esta acción depende de la estación en la que se encuentre la granja.
      */
     public void produccionAnimales(){
-        establo.produccion(this.estacion);
+        establo.produccion(this.estacion, diaActual);
     }
     /**
      * Vende los productos de los animales del establo, actualizando el presupuesto
@@ -297,4 +297,9 @@ public class Granja implements Serializable {
         double gastoTotal = establo.rellenarComedero();
         actualizarPresupuesto((int)-gastoTotal);
         System.out.println("El GASTO TOTAL por rellenar el comedero ha sido de " + gastoTotal + "€.");}
+
+
+    public void resetearBasesDatos(){
+        establo.resetearBasesDatos();
+    }
 }

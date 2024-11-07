@@ -20,7 +20,7 @@ public class Cerdos extends Animales implements Serializable {
     }
 
     @Override
-    public int producir(Estacion estacion) {
+    public int producir(Estacion estacion,int diaJuego) {
         if (!isEstaAlimentado()) {
             return 0;
         }

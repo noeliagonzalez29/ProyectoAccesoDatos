@@ -3,7 +3,6 @@ package Clases;
 import java.io.Serializable;
 
 public class Gallinas extends Animales implements Serializable {
-    int numDias;
 
     public Gallinas() {
     }
@@ -12,21 +11,21 @@ public class Gallinas extends Animales implements Serializable {
 
     public Gallinas(int id, Anim tipoAnimal, String nombre) {
         super(id, tipoAnimal, nombre,0);
-        this.numDias = numDias;
     }
 
     @Override
-    public int producir(Estacion estacion) {
+    public int producir(Estacion estacion,int diaJuego) {
         if (!isEstaAlimentado()) {
             return 0;
         }
 
         int cantidadProducida = 0;
-        if (numDias > 40) {
+        int diasVida = diaJuego - dia_insercion;
+        if (diasVida > 40) {
             cantidadProducida = 1;
-        } else if (numDias > 3) {
+        } else if (diasVida > 3) {
             cantidadProducida = 2;
-        } else if (numDias<3) {
+        } else if (diasVida<3) {
             System.out.println(getNombre() + "No puede producir lleva menos de 3 días");
         }
 

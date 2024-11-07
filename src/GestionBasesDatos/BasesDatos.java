@@ -303,6 +303,44 @@ public class BasesDatos {
         }
     }
 
+    public  void eliminarHistoricoConsumo(){
 
+        try {
+            String query= "DELETE FROM historialconsumo ";
+            PreparedStatement stmt = connection.prepareStatement(query);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    public void eliminarHistoricoProduccion(){
+        try {
+            String query= "DELETE FROM historialproduccion ";
+            PreparedStatement stmt = connection.prepareStatement(query);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void eliminarTransacciones(){
+        try {
+            String query= "DELETE FROM transacciones ";
+            PreparedStatement stmt = connection.prepareStatement(query);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void actualizacionEliminacionProductosComienzo(){
+        try {
+            String query = "UPDATE productos SET  cantidad_disponible = ?";
+            PreparedStatement stmt = connection.prepareStatement(query);
+           stmt.setInt(1, 0 );
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
 

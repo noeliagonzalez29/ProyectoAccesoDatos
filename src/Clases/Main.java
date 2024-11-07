@@ -164,6 +164,7 @@ public class Main {
         String resp;
         String[] valores;
         boolean personalizado;
+
         //si hay fichero binario es por que habia partida previa y hay que borrar el bin
         GESTION_BINARIO.eliminarBinarioPartida();
         p.eliminarConfiguracionPersonalizada();
@@ -185,6 +186,8 @@ public class Main {
         granja.inicializarValores(personalizado);
         menuJuego(granja);
         granja.getH().cerrarConexion();
+        //Reseteamos los historicos
+        granja.resetearBasesDatos();
     }
 
     /**
@@ -216,6 +219,7 @@ public class Main {
                     switch (opcion) {
                         case 1:
                             nuevaPartida();
+
                             break;
                         case 2:
                             cargarPartida();

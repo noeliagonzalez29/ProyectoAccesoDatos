@@ -85,13 +85,10 @@ public class Establo implements Serializable {
 
                     basesDatos.inssertarTablaConsumo(animal.getId(), nuevaCantidad, fechaActual);
 
-                } /*
-
-                else {
-                    System.out.println("No hay suficiente alimento para " + animal.getNombre());
+                } else {
+                    System.out.println("No todos los animales han podido ser alimentados:  " + animal.getNombre());
                 }
 
-                */
 
             } else {
                 System.out.println("El animal " + animal.getNombre() + " ya fue alimentado hoy.");
@@ -106,15 +103,15 @@ public class Establo implements Serializable {
      * producidos y su fecha de producción.
      * @param estacion La estación en la que se encuentra el establo.
      */
-    public void produccion(Estacion estacion) {
+    public void produccion(Estacion estacion, int diaJuegoGranja) {
         System.out.println("Comienzo de produccion.....");
         for (Animales animal : lAnimales) {
-            int produccion = animal.producir( estacion);
+            int produccion = animal.producir( estacion, diaJuegoGranja);
 
             if (produccion > 0) {
                 System.out.println(animal.getNombre() + " ha producido " + produccion + " unidades de " +
                         animal.getP().getNombre());
-                basesDatos.actualizarTablaProductos(animal.getP().getId(), animal.getP().getCantidad());
+                basesDatos.actualizarTablaProductos(animal.getP().getId(), produccion);
 
                 Timestamp fecha_produccion = new Timestamp(System.currentTimeMillis());
                 //para ver la fecha
@@ -147,14 +144,7 @@ public class Establo implements Serializable {
                         " unidades de " + p.getNombre() +
                         " por " + precio + "€");
 
-                // Registrar la transacción
-                Timestamp fechaVenta = new Timestamp(System.currentTimeMillis());
-                basesDatos.registrarTablaTransacciones(
-                        Tipo_transaccion.VENTA,
-                        Tipo_elemento.PRODUCTO,
-                        precio,
-                        fechaVenta
-                );
+
 
                 // Actualizar la cantidad en la base de datos
                 basesDatos.actualizarTablaProductos(p.getId(), 0);  // Ponemos la cantidad a 0
@@ -163,8 +153,17 @@ public class Establo implements Serializable {
                 p.setCantidad(0);
 
                 ingresoTotal +=precio;
+
             }
         }
+        // Registrar la transacción con el total de todas las ventas
+        Timestamp fechaVenta = new Timestamp(System.currentTimeMillis());
+        basesDatos.registrarTablaTransacciones(
+                Tipo_transaccion.VENTA,
+                Tipo_elemento.PRODUCTO,
+                ingresoTotal,
+                fechaVenta
+        );
         return ingresoTotal;
     }
     /**
@@ -192,11 +191,6 @@ public class Establo implements Serializable {
                     // Comprar alimento y actualizar cantidad disponible
                     basesDatos.actualizarAlimentos(a.getId(), CANT_MAX);
                     a.setCantidad(CANT_MAX);
-
-                    // Registrar transacción en la tabla Transacciones
-                    Timestamp fechaCompra = new Timestamp(System.currentTimeMillis());
-                    basesDatos.registrarTablaTransacciones(Tipo_transaccion.COMPRA, Tipo_elemento.ALIMENTO, compra, fechaCompra);
-
                     totalCompra += compra;
                     System.out.println("Se ha rellenado el comedero de " + a.getNombre() + " con " + cantidadNecesaria + " unidades a un costo de " + compra + "€");
                 } else if (a.getCantidad() > CANT_MAX) {
@@ -205,10 +199,18 @@ public class Establo implements Serializable {
                     System.out.println("No hay suficientes recursos para comprar más " + a.getNombre() + ".");
                 }
             }
+            // Registrar transacción en la tabla Transacciones
+            Timestamp fechaCompra = new Timestamp(System.currentTimeMillis());
+            basesDatos.registrarTablaTransacciones(Tipo_transaccion.COMPRA, Tipo_elemento.ALIMENTO, totalCompra, fechaCompra);
             return totalCompra;
 
     }
-
+    public  void resetearBasesDatos(){
+        basesDatos.actualizacionEliminacionProductosComienzo();
+        basesDatos.eliminarHistoricoConsumo();
+        basesDatos.eliminarHistoricoProduccion();
+        basesDatos.eliminarTransacciones();
+    }
 }
 
 
