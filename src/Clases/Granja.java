@@ -238,8 +238,8 @@ public class Granja implements Serializable {
      * @param cantidad cantidad a sumar o restar del presupuesto
      */
     private void actualizarPresupuesto(int cantidad) {
-        presupuesto += cantidad;
-    }
+        presupuesto += cantidad ;
+    } //incluir las ganancias de la venta de la produccion de animales
 
     /**
      * Muestra el estado actual de la granja, incluyendo el día, la estación,
@@ -254,13 +254,18 @@ public class Granja implements Serializable {
         a.mostrarAlmacen();
 
     }
-
+    /**
+     * Muestra el estado actual del establo, incluyendo los animales, los alimentos
+     * disponibles y los productos que se pueden vender.
+     */
     public void mostrarEstablo(){
         establo.mostrarAnimales();
         establo.mostrarAlimentos();
         establo.mostrarProductos();
     }
-
+    /**
+     * Alimenta a los animales del establo si el día actual está dentro de la duración de la estación.
+     */
     public  void alimentarAnimales(){
         int duracionEstacion = Integer.parseInt(propiedades.getProperty("duracionestacion"));
 
@@ -269,12 +274,27 @@ public class Granja implements Serializable {
         }
 
     }
+    /**
+     * Realiza la producción de productos de los animales según la estación actual.
+     * Esta acción depende de la estación en la que se encuentre la granja.
+     */
     public void produccionAnimales(){
         establo.produccion(this.estacion);
     }
-
+    /**
+     * Vende los productos de los animales del establo, actualizando el presupuesto
+     * de la granja con las ganancias obtenidas.
+     */
     public void venderProductos(){
-        establo.venderProductos();
+        double ingresoTotal = establo.venderProductos();
+        actualizarPresupuesto((int) ingresoTotal);
     }
-    public void rellenarComedero(){establo.rellenarComedero();}
+    /**
+     * Rellena el comedero de los animales en el establo y actualiza el presupuesto
+     * con el gasto total realizado para ello.
+     */
+    public void rellenarComedero(){
+        double gastoTotal = establo.rellenarComedero();
+        actualizarPresupuesto((int)-gastoTotal);
+        System.out.println("El GASTO TOTAL por rellenar el comedero ha sido de " + gastoTotal + "€.");}
 }

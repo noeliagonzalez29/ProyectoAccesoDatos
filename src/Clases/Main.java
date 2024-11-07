@@ -138,6 +138,7 @@ public class Main {
 
                     break;
                 case 4:
+                    granja.rellenarComedero();
                     break;
                 case 5:
                     //mostrar animales instancia de establo en granja para mostrarlo

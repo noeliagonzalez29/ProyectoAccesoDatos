@@ -34,7 +34,7 @@ public class Ovejas extends Animales implements Serializable {
         if (fechaEsquilado != null) {
             long diferenciaDias = (fechaActual.getTime() - fechaEsquilado.getTime()) / (24 * 60 * 60 * 1000);
             if (diferenciaDias < 2) {
-                return 0;
+                System.out.println(getNombre() + "No puede producir lana no han pasado 2 días");
             }
         }
 

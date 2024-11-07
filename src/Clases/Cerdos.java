@@ -35,6 +35,7 @@ public class Cerdos extends Animales implements Serializable {
                 cantidadProducida = (int) (Math.random() * 2); // Entre 0 y 1
                 break;
             case INVIERNO:
+                System.out.println(getNombre()+ "no produce en invierno");
                 cantidadProducida = 0;
                 break;
         }

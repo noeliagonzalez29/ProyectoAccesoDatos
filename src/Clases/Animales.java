@@ -84,7 +84,7 @@ public abstract class Animales implements Serializable {
         this.estaAlimentado = estaAlimentado;
     }
 
-
+    //metodo abstracto producir
     public abstract int producir(Estacion estacion);
     public int calcularCantidadConsumida() {
         switch (tipoAnimal) {
@@ -112,5 +112,5 @@ public abstract class Animales implements Serializable {
     public void setProducto(Productos producto) {
     }
 
-    //metodo abstracto producir
+
 }

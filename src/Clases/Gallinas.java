@@ -26,10 +26,13 @@ public class Gallinas extends Animales implements Serializable {
             cantidadProducida = 1;
         } else if (numDias > 3) {
             cantidadProducida = 2;
+        } else if (numDias<3) {
+            System.out.println(getNombre() + "No puede producir lleva menos de 3 días");
         }
 
         if (cantidadProducida > 0) {
             setEstaAlimentado(false); // Necesita volver a ser alimentada
+
             // Actualizar la cantidad de huevos en el producto
             getP().setCantidad(getP().getCantidad() + cantidadProducida);
         }
