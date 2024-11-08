@@ -1,5 +1,7 @@
 package Clases;
 
-public enum Anim {
+import java.io.Serializable;
+
+public enum Anim implements Serializable {
     GALLINA, OVEJA, VACA, CERDO
 }

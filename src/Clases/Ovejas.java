@@ -9,10 +9,8 @@ public class Ovejas extends Animales implements Serializable {
     public Ovejas() {
     }
 
-
-
     public Ovejas(int id, Anim tipoAnimal, String nombre) {
-        super(id, tipoAnimal, nombre,0);
+        super(id, tipoAnimal, nombre, 0);
         this.fechaEsquilado = fechaEsquilado;
     }
 
@@ -23,6 +21,10 @@ public class Ovejas extends Animales implements Serializable {
     public void setFechaEsquilado(Date fechaEsquilado) {
         this.fechaEsquilado = fechaEsquilado;
     }
+
+    /**
+     * Metodo que sobreescribe de Animal y determina como produce las ovejas acorde a la fecha de esquilado (dias reales)
+     */
     @Override
     public int producir(Estacion estacion, int diaJuego) {
         if (!isEstaAlimentado()) {

@@ -14,19 +14,19 @@ public abstract class Animales implements Serializable {
     private Productos producto;
     private int peso;
     private int diasEnJuego;
+
     public Animales() {
     }
 
-    public Animales( int id, Anim tipoAnimal, String nombre, int dia_insercion) {
+    public Animales(int id, Anim tipoAnimal, String nombre, int dia_insercion) {
         this.id = id;
         this.tipoAnimal = tipoAnimal;
         this.nombre = nombre;
-        this.peso= peso;
+        this.peso = peso;
         this.dia_insercion = dia_insercion;
-        this.estaAlimentado= false;
+        this.estaAlimentado = false;
 
     }
-
 
     public int getId() {
         return id;
@@ -52,19 +52,11 @@ public abstract class Animales implements Serializable {
         this.nombre = nombre;
     }
 
-    public int getDia_insercion() {
-        return dia_insercion;
-    }
-
-    public void setDia_insercion(int dia_insercion) {
-        this.dia_insercion = dia_insercion;
-    }
-
     public Productos getP() {
         return producto;
     }
 
-    public void setP(Productos  p) {
+    public void setP(Productos p) {
         this.producto = p;
     }
 
@@ -72,7 +64,7 @@ public abstract class Animales implements Serializable {
         return alimento;
     }
 
-    public void setA(Alimentos  a) {
+    public void setA(Alimentos a) {
         this.alimento = a;
     }
 
@@ -84,14 +76,21 @@ public abstract class Animales implements Serializable {
         this.estaAlimentado = estaAlimentado;
     }
 
-    //metodo abstracto producir
+    /**
+     * Metodo que es abstracto y cada hijo lo desarrolla para producir cada animal su producto
+     */
     public abstract int producir(Estacion estacion, int diaJuego);
+
+    /**
+     * Metodo para calcular la cantidad que cada animal consume tras alimentarse
+     */
     public int calcularCantidadConsumida() {
+        int diasVida = diasEnJuego - dia_insercion;
         switch (tipoAnimal) {
             case VACA:
-                if (diasEnJuego < 10) {
+                if (diasVida < 10) {
                     return 1;
-                } else if (diasEnJuego < 40) {
+                } else if (diasVida < 40) {
                     return 3;
                 } else {
                     return 2;
@@ -104,13 +103,5 @@ public abstract class Animales implements Serializable {
                 return 0;
         }
     }
-
-
-    public void setAlimento(Alimentos alimento) {
-    }
-
-    public void setProducto(Productos producto) {
-    }
-
 
 }

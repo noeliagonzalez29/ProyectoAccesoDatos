@@ -6,24 +6,14 @@ import java.util.List;
 public class Vacas extends Animales implements Serializable {
     int peso;
 
-    public Vacas() {
-    }
-
     public Vacas(int id, Anim tipoAnimal, String nombre, int peso) {
         super(id, tipoAnimal, nombre,0);
 
         this.peso = peso;
     }
-
-
-
-    public int getPeso() {
-        return peso;
-    }
-
-    public void setPeso(int peso) {
-        this.peso = peso;
-    }
+    /**
+     * Metodo que sobreescribe de Animal y determina como producen las vacas acorde al % de su peso
+     */
     @Override
     public int producir(Estacion estacion,int diaJuego) {
         if (!isEstaAlimentado()) {

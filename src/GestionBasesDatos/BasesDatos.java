@@ -4,16 +4,26 @@ import Clases.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-public class BasesDatos {
+/**
+ * Clase que gestiona la conexión y operaciones con la base de datos de la aplicación.
+ * Proporciona métodos para cargar, actualizar y eliminar información relacionada
+ * con los animales, alimentos y productos en la granja.
+ */
+public class BasesDatos implements Serializable {
     private final static  String RUTA_FICH_CONFB= "src/resources/base.properties";
     private static BasesDatos instancia;
-    private Connection connection;
-
+    private transient Connection connection;
+    private static final long serialVersionUID = 1L;
+    /**
+     * Constructor de la clase BasesDatos. Establece la conexión a la base de datos
+     * utilizando las propiedades de configuración especificadas.
+     * @throws RuntimeException si ocurre un error al establecer la conexión.
+     */
     public BasesDatos() {
         try {
             Properties properties = new Properties();
@@ -31,7 +41,11 @@ public class BasesDatos {
             throw new RuntimeException("Error al iniciar la conexion a base de datos" , e);
         }
     }
-
+    /**
+     * Devuelve una instancia única de BasesDatos (patrón Singleton).
+     * Si la instancia no ha sido creada, la inicializa.
+     * @return instancia de BasesDatos
+     */
     public static BasesDatos getInstancia() {
         if (instancia==null){
             instancia= new BasesDatos();
@@ -39,7 +53,12 @@ public class BasesDatos {
 
         return  instancia;
     }
-    //Primero la carga de animales
+    /**
+     * Carga la lista de animales desde la base de datos.
+     * Incluye la información de los productos y alimentos asociados a cada animal.
+     * @return Lista de objetos de tipo Animales
+     * @throws RuntimeException si ocurre un error al realizar la consulta.
+     */
     public List<Animales>cargarAnimales(){
         List<Animales> lAnimales= new ArrayList<>();
         try {
@@ -109,6 +128,11 @@ public class BasesDatos {
         }
         return lAnimales;
     }
+    /**
+     * Carga la lista de alimentos disponibles en la base de datos.
+     * @return Lista de objetos de tipo Alimentos
+     * @throws RuntimeException si ocurre un error al realizar la consulta.
+     */
     public List<Alimentos> cargarAlimentos(){
         List <Alimentos> lAlimentos= new ArrayList<>();
         Alimentos alimentos = null;
@@ -130,7 +154,11 @@ public class BasesDatos {
         }
         return lAlimentos;
     }
-
+    /**
+     * Carga la lista de productos disponibles en la base de datos.
+     * @return Lista de objetos de tipo Productos
+     * @throws RuntimeException si ocurre un error al realizar la consulta.
+     */
     public List<Productos> cargarProductos(){
        List<Productos>lProductos= new ArrayList<>(); //cambiar a lista
         try {
@@ -151,7 +179,10 @@ public class BasesDatos {
         return lProductos;
     }
 
-
+    /**
+     * Muestra en consola los nombres y cantidades disponibles de los alimentos.
+     * @throws RuntimeException si ocurre un error al realizar la consulta.
+     */
     public void alimentos(){
         try {
             PreparedStatement stmt = connection.prepareStatement( " SELECT * FROM alimentos" );
@@ -172,7 +203,10 @@ public class BasesDatos {
         }
 
     }
-
+    /**
+     * Muestra en consola los nombres y cantidades disponibles de los productos.
+     * @throws RuntimeException si ocurre un error al realizar la consulta.
+     */
     public void productos(){
         try {
             PreparedStatement stmt = connection.prepareStatement( " SELECT * FROM productos" );
@@ -191,7 +225,12 @@ public class BasesDatos {
             throw new RuntimeException(e);
         }
     }
-   //metodo para actualizar la tabla alimentos
+    /**
+     * Actualiza la cantidad disponible de un alimento específico en la base de datos.
+     * @param id_alimento ID del alimento a actualizar
+     * @param cantidad_disponible Nueva cantidad disponible
+     * @throws RuntimeException si ocurre un error al realizar la actualización.
+     */
     public void actualizarAlimentos(int id_alimento, int cantidad_disponible){
         try {
             PreparedStatement stmt = connection.prepareStatement( " UPDATE alimentos SET cantidad_disponible = ? WHERE id = ?" );
@@ -203,9 +242,13 @@ public class BasesDatos {
             throw new RuntimeException(e);
         }
     }
-    //metodo historial produccion
-
-   //metodo historial consumo. Esto es un insertar
+    /**
+     * Inserta un registro de consumo de alimento para un animal específico en la base de datos.
+     * @param id_animal ID del animal
+     * @param cantidad_consumida Cantidad consumida por el animal
+     * @param fecha_consumo Fecha del consumo
+     * @throws RuntimeException si ocurre un error al realizar la inserción.
+     */
     public void inssertarTablaConsumo( int id_animal, int cantidad_consumida, Timestamp fecha_consumo){
         try {
             String query= " INSERT INTO historialconsumo ( id_animal, cantidad_consumida, fecha_consumo) VALUES ( ?, ?, ?)" ;
@@ -219,7 +262,12 @@ public class BasesDatos {
             throw new RuntimeException(e);
         }
     }
-//Actualizar tabla productos
+    /**
+     * Actualiza la cantidad disponible de un producto específico en la base de datos.
+     * @param id ID del producto a actualizar
+     * @param cantidad_disponible Cantidad a agregar a la cantidad disponible actual
+     * @throws RuntimeException si ocurre un error al realizar la actualización.
+     */
     public void actualizarTablaProductos(int id, int cantidad_disponible){
 
         try {
@@ -233,7 +281,13 @@ public class BasesDatos {
         }
 
     }
-    //Insertar en la tabla Historial_produccion
+    /**
+     * Inserta un registro de producción de producto en la base de datos.
+     * @param id_animal ID del animal que produjo el producto
+     * @param cantidad Cantidad de producto producida
+     * @param fecha_produccion Fecha de producción
+     * @throws RuntimeException si ocurre un error al realizar la inserción.
+     */
     public void insertarTablaHistorialProduccion(int id_animal, int cantidad, Timestamp fecha_produccion){
         try {
             String query= " INSERT INTO historialproduccion ( id_animal, cantidad, fecha_produccion) VALUES (?, ?, ? )" ;
@@ -247,7 +301,14 @@ public class BasesDatos {
             throw new RuntimeException(e);
         }
     }
-    //metodo transacciones
+    /**
+     * Registra una transacción en la base de datos.
+     * @param tipoTransaccion Tipo de transacción realizada (compra o venta)
+     * @param tipoElemento Tipo de elemento involucrado (producto o alimento)
+     * @param precio Precio de la transacción
+     * @param fecha Fecha de la transacción
+     * @throws RuntimeException si ocurre un error al realizar la inserción.
+     */
     public void registrarTablaTransacciones( Tipo_transaccion tipoTransaccion,
                                             Tipo_elemento tipoElemento, double precio, Timestamp fecha){
 
@@ -270,7 +331,12 @@ public class BasesDatos {
     }
 
 
-    //leer la cantidad de alimento
+    /**
+     * Consulta la cantidad disponible de un alimento específico en la base de datos.
+     * @param id ID del alimento
+     * @return Cantidad disponible del alimento
+     * @throws RuntimeException si ocurre un error al realizar la consulta.
+     */
     public int leerCantidadAlimento(int id){
         int cantidad_disponible=0;
 
@@ -291,18 +357,11 @@ public class BasesDatos {
         return cantidad_disponible;
     }
 
-    public void actualizarAlimento(int id, int cantidad_disponible){
-        try {
-            String query = "UPDATE productos SET  cantidad_disponible = cantidad_disponible + ? WHERE id = ? ";
-            PreparedStatement stmt = connection.prepareStatement(query);
-            stmt.setInt(1, cantidad_disponible );
-            stmt.setInt(2, id);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
+    /**
+     * Elimina todos los registros en la tabla de historial de consumo.
+     * @throws RuntimeException si ocurre un error al realizar la eliminación.
+     */
     public  void eliminarHistoricoConsumo(){
 
         try {
@@ -313,6 +372,10 @@ public class BasesDatos {
         }
 
     }
+    /**
+     * Elimina todos los registros en la tabla de historial de producción.
+     * @throws RuntimeException si ocurre un error al realizar la eliminación.
+     */
     public void eliminarHistoricoProduccion(){
         try {
             String query= "DELETE FROM historialproduccion ";
@@ -321,7 +384,10 @@ public class BasesDatos {
             throw new RuntimeException(e);
         }
     }
-
+    /**
+     * Elimina todos los registros en la tabla de transacciones.
+     * @throws RuntimeException si ocurre un error al realizar la eliminación.
+     */
     public void eliminarTransacciones(){
         try {
             String query= "DELETE FROM transacciones ";
@@ -330,7 +396,10 @@ public class BasesDatos {
             throw new RuntimeException(e);
         }
     }
-
+    /**
+     * Establece la cantidad disponible de todos los productos en la base de datos a cero.
+     * @throws RuntimeException si ocurre un error al realizar la actualización.
+     */
     public void actualizacionEliminacionProductosComienzo(){
         try {
             String query = "UPDATE productos SET  cantidad_disponible = ?";
@@ -340,6 +409,29 @@ public class BasesDatos {
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+    /**
+     * Restablece la conexión a la base de datos si la conexión actual es nula.
+     * Carga las propiedades de configuración y reinicia la conexión.
+     * @throws RuntimeException si ocurre un error al restablecer la conexión.
+     */
+    //restablecer conexion al cargar la partida porque he puesto como transient la connection si no no me dejaba guardar
+    public void restablecerConexion(){
+        if (this.connection == null) {
+            try {
+                Properties properties = new Properties();
+                properties.load(new FileInputStream(RUTA_FICH_CONFB));
+                String dbUrl = properties.getProperty("dbUrl");
+                String dbDriver = properties.getProperty("dbDriver");
+                String dbUser = properties.getProperty("dbUser");
+                String dbPassword = properties.getProperty("dbPassword");
+
+                Class.forName(dbDriver);
+                connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+            } catch (IOException | ClassNotFoundException | SQLException e) {
+                throw new RuntimeException("Error al reestablecer la conexión a la base de datos", e);
+            }
         }
     }
 }

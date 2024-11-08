@@ -1,5 +1,7 @@
 package Clases;
 
-public enum Tipo_elemento {
+import java.io.Serializable;
+
+public enum Tipo_elemento implements Serializable {
     PRODUCTO, ALIMENTO, HUERTO
 }

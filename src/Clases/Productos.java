@@ -1,21 +1,14 @@
 package Clases;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Productos {
+public class Productos implements Serializable {
     private int id;
     private String nombre;
     private double precio;
     private int cantidad;
-    private Tipo_elemento tipo_elemento;
 
-    public Tipo_elemento getTipo_elemento() {
-        return tipo_elemento;
-    }
-
-    public void setTipo_elemento(Tipo_elemento tipo_elemento) {
-        this.tipo_elemento = tipo_elemento;
-    }
 
     public Productos() {
     }
@@ -39,8 +32,6 @@ public class Productos {
         this.id = id;
     }
 
-
-
     public String getNombre() {
         return nombre;
     }
@@ -51,10 +42,6 @@ public class Productos {
 
     public double getPrecio() {
         return precio;
-    }
-
-    public void setPrecio(double precio) {
-        this.precio = precio;
     }
 
     public int getCantidad() {

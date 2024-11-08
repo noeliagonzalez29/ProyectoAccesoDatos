@@ -1,5 +1,7 @@
 package Clases;
 
-public enum Tipo_transaccion {
+import java.io.Serializable;
+
+public enum Tipo_transaccion implements Serializable {
     COMPRA, VENTA
 }

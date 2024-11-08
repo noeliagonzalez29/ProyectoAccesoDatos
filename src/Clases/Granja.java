@@ -44,11 +44,12 @@ public class Granja implements Serializable {
         this.propiedades = GestionProperties.getInstancia();
         this.diaActual = 0;
         this.diasEnEstacionActual = 1;
-        this.establo= new Establo();
-       // h.abrirConexion();
+        this.establo = new Establo();
+        // h.abrirConexion();
         inicializarValores(false);
 
     }
+
 
     /**
      * Inicializa los valores de la granja según las propiedades cargadas.
@@ -238,7 +239,7 @@ public class Granja implements Serializable {
      * @param cantidad cantidad a sumar o restar del presupuesto
      */
     private void actualizarPresupuesto(int cantidad) {
-        presupuesto += cantidad ;
+        presupuesto += cantidad;
     } //incluir las ganancias de la venta de la produccion de animales
 
     /**
@@ -254,19 +255,21 @@ public class Granja implements Serializable {
         a.mostrarAlmacen();
 
     }
+
     /**
      * Muestra el estado actual del establo, incluyendo los animales, los alimentos
      * disponibles y los productos que se pueden vender.
      */
-    public void mostrarEstablo(){
+    public void mostrarEstablo() {
         establo.mostrarAnimales();
         establo.mostrarAlimentos();
         establo.mostrarProductos();
     }
+
     /**
      * Alimenta a los animales del establo si el día actual está dentro de la duración de la estación.
      */
-    public  void alimentarAnimales(){
+    public void alimentarAnimales() {
         int duracionEstacion = Integer.parseInt(propiedades.getProperty("duracionestacion"));
 
         if (diaActual < duracionEstacion) {
@@ -274,32 +277,47 @@ public class Granja implements Serializable {
         }
 
     }
+
     /**
      * Realiza la producción de productos de los animales según la estación actual.
      * Esta acción depende de la estación en la que se encuentre la granja.
      */
-    public void produccionAnimales(){
+    public void produccionAnimales() {
         establo.produccion(this.estacion, diaActual);
     }
+
     /**
      * Vende los productos de los animales del establo, actualizando el presupuesto
      * de la granja con las ganancias obtenidas.
      */
-    public void venderProductos(){
+    public void venderProductos() {
         double ingresoTotal = establo.venderProductos();
         actualizarPresupuesto((int) ingresoTotal);
     }
+
     /**
      * Rellena el comedero de los animales en el establo y actualiza el presupuesto
      * con el gasto total realizado para ello.
      */
-    public void rellenarComedero(){
+    public void rellenarComedero() {
         double gastoTotal = establo.rellenarComedero();
-        actualizarPresupuesto((int)-gastoTotal);
-        System.out.println("El GASTO TOTAL por rellenar el comedero ha sido de " + gastoTotal + "€.");}
+        actualizarPresupuesto((int) -gastoTotal);
+        System.out.println("El GASTO TOTAL por rellenar el comedero ha sido de " + gastoTotal + "€.");
+    }
 
-
-    public void resetearBasesDatos(){
+    /**
+     * metodo que me sirve para restear la base de datos al iniciar partida
+     */
+    public void resetearBasesDatos() {
         establo.resetearBasesDatos();
+    }
+
+    /**
+     * metodo que tengo para restablecer la conexion a la base de datos. Enlaza al establo y este tiene otro metodo que en laza
+     * con la base de datos que contiene el método en sí
+     */
+
+    public void restablecerConexionG() {
+        establo.resstablecerConexionE();
     }
 }

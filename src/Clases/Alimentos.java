@@ -2,9 +2,10 @@ package Clases;
 
 import GestionBasesDatos.BasesDatos;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Alimentos {
+public class Alimentos implements Serializable {
     private int id;
     private String nombre;
     private double precio;
@@ -34,8 +35,6 @@ public class Alimentos {
         this.id = id;
     }
 
-
-
     public String getNombre() {
         return nombre;
     }
@@ -48,9 +47,7 @@ public class Alimentos {
         return precio;
     }
 
-    public void setPrecio(double precio) {
-        this.precio = precio;
-    }
+
 
     public int getCantidad() {
         return cantidad_disponible;

@@ -7,14 +7,15 @@ public class Gallinas extends Animales implements Serializable {
     public Gallinas() {
     }
 
-
-
     public Gallinas(int id, Anim tipoAnimal, String nombre) {
-        super(id, tipoAnimal, nombre,0);
+        super(id, tipoAnimal, nombre, 0);
     }
 
+    /**
+     * Metodo que sobreescribe de Animal y determina como produce las gallinas acorde a los dias que lleva en el juego
+     */
     @Override
-    public int producir(Estacion estacion,int diaJuego) {
+    public int producir(Estacion estacion, int diaJuego) {
         if (!isEstaAlimentado()) {
             return 0;
         }
@@ -25,7 +26,7 @@ public class Gallinas extends Animales implements Serializable {
             cantidadProducida = 1;
         } else if (diasVida > 3) {
             cantidadProducida = 2;
-        } else if (diasVida<3) {
+        } else if (diasVida < 3) {
             System.out.println(getNombre() + "No puede producir lleva menos de 3 días");
         }
 
@@ -39,11 +40,5 @@ public class Gallinas extends Animales implements Serializable {
         return cantidadProducida;
     }
 
-    public int getNumDias() {
-        return numDias;
-    }
 
-    public void setNumDias(int numDias) {
-        this.numDias = numDias;
-    }
 }

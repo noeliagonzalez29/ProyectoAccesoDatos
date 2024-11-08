@@ -54,14 +54,20 @@ public class Main {
                     default:
                         throw new IllegalStateException("Unexpected value: " + opc);
                 }
-            } catch (InputMismatchException e) {
-                System.out.println("Debe introducir un número del 1 al 6");
+            } catch (InputMismatchException e  ) {
+                System.out.println("Debe introducir un número del 1 al 4");
                 entrada.nextLine(); //hay que limpiar porque si no no deja de repetirse
 
+            }catch(IllegalStateException exception){
+                System.out.println("Debe introducir un número del 1 al 4");
             }
         } while (opc != 4);
 
     }
+    /**
+     * Muestra el menú de huerto del juego y gestiona la lógica del huerto en el juego en función de la opción elegida por el usuario.
+     *
+     */
     public static void menuHuerto(Granja granja){
         Scanner entrada = new Scanner(System.in);
         int opc = 0;
@@ -114,6 +120,10 @@ public class Main {
 
         }while(opc!=5);
     }
+    /**
+     * Muestra el nuevo menu establo del juego y gestiona la lógica del mismo en función de la opción elegida por el usuario.
+     *
+     */
     public static void menuEstablo(Granja granja){
         Scanner entrada = new Scanner(System.in);
         int opc = 0;
@@ -198,6 +208,10 @@ public class Main {
         //cargo el binario si existe y muestro el menu
         if (GESTION_BINARIO.existeFichero()) {
             granja = GESTION_BINARIO.cargarBinarioPartida();
+
+           //tengo que restablecer la conexion
+            granja.restablecerConexionG();
+
             menuJuego(granja);
         } else {
             System.out.println("No existe partida guardada");

@@ -9,9 +9,8 @@ public class Cerdos extends Animales implements Serializable {
     }
 
 
-
     public Cerdos(int id, Anim tipoAnimal, String nombre) {
-        super(id, tipoAnimal, nombre,0);
+        super(id, tipoAnimal, nombre, 0);
         this.estacion = estacion;
     }
 
@@ -19,8 +18,12 @@ public class Cerdos extends Animales implements Serializable {
         return estacion;
     }
 
+    /**
+     * Metodo que sobreescribe de animal ya que es hijo y determina como los cerdos producen acorde a la estacion
+     */
+
     @Override
-    public int producir(Estacion estacion,int diaJuego) {
+    public int producir(Estacion estacion, int diaJuego) {
         if (!isEstaAlimentado()) {
             return 0;
         }
@@ -35,7 +38,7 @@ public class Cerdos extends Animales implements Serializable {
                 cantidadProducida = (int) (Math.random() * 2); // Entre 0 y 1
                 break;
             case INVIERNO:
-                System.out.println(getNombre()+ "no produce en invierno");
+                System.out.println(getNombre() + " NO produce en invierno");
                 cantidadProducida = 0;
                 break;
         }
